@@ -54,43 +54,52 @@ q2 = bandpass(hps, [2200 2900], Fs);
 q3 = bandpass(hps, [3400 3900], Fs);
 
 trans = hps - q1 - q2 - q3;
-trans = trans .* 20;
+amplification = linspace(1, 25, 50);
+trans = trans .* amplification;
 improved = original + trans;
 
-I = fft(improved);
-I = fftshift(I);
-
 % Normalize the improved signal power
-Po = sum(abs(O));
-Pi = sum(abs(I));
-a = Po / Pi;
+Po = sum(abs(original));
+Pi = sum(abs(improved));
+a = Po ./ Pi;
 improved = improved .* a;
 
 I = fft(improved);
 I = fftshift(I);
 
-figure;
-subplot(2,1,1);
-plot(improved, 'm');
-hold on;
-plot(original, 'b');
-xlim([2.655e5 2.95e5]);
-title('Transient Enhanced Speech Signal');
-xlabel('Time [s]');
-ylabel('Amplitude');
-legend('Enhanced speech', 'Original speech');
-
-subplot(2,1,2);
-plot(f, abs(O), 'b');
-hold on;
-plot(f, abs(I), 'm');
-title('Frequency spectrum');
-xlim([0 4000]);
-xlabel('Frequency [Hz]');
-ylabel('Amplitude');
+% figure;
+% subplot(2,1,1);
+% plot(improved, 'm');
+% hold on;
+% plot(original, 'b');
+% xlim([2.655e5 2.95e5]);
+% title('Transient Enhanced Speech Signal');
+% xlabel('Time [s]');
+% ylabel('Amplitude');
+% legend('Enhanced speech', 'Original speech');
+% 
+% subplot(2,1,2);
+% plot(f, abs(O), 'b');
+% hold on;
+% plot(f, abs(I), 'm');
+% title('Frequency spectrum');
+% xlim([0 4000]);
+% xlabel('Frequency [Hz]');
+% ylabel('Amplitude');
 
 % Near-end noise
 improved = improved + train;
 %original = original + train;
 
-sound(improved, Fs);
+%sound(improved, Fs);
+
+d = [];
+for i = 1:50
+    d(i) = stoi(original, improved(:,i), Fs);
+end
+
+figure;
+plot(amplification, d);
+title('STOI Improved Signal');
+xlabel('Transient Amplification');
+ylabel('Intelligibility [%]');
