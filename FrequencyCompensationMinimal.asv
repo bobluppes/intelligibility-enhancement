@@ -160,7 +160,7 @@ improved = improved + train;
 d = stoi(original, improved, Fs);
 
 figure;
-sgtitle('Formant amplification STOI = ' + string(d));
+sgtitle(' STOI = ' + string(d));
 
 subplot(2,2,1);
 plot(f, abs(T));
@@ -179,5 +179,3 @@ plot(f, SNR1);
 
 subplot(2,2,4);
 plot(f, SNR2);
-
-sound(improved, Fs);
