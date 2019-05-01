@@ -51,7 +51,7 @@ f = Omega*Fs/(2*pi);
 
 d = [];
 center = [1000 2550 3700];
-bw = [20 50 100 300 500 700];
+bw = [100 300 500 700 900 1100];
 for j = 1:6
     q1 = bandpass(hps, [(center(1) - (bw(j)/2)) (center(1) + (bw(j)/2))], Fs);
     q2 = bandpass(hps, [(center(2) - (bw(j)/2)) (center(2) + (bw(j)/2))], Fs);
@@ -110,8 +110,6 @@ hold on;
 for i = 2:length(d(end,:))
     plot(amplification, d(:,i));
 end
-hold off;
 title('STOI Improved Signal');
 xlabel('Transient Amplification');
 ylabel('Intelligibility [%]');
-legend('BW 20', 'BW 50', 'BW 100', 'BW 300', 'BW 500', 'BW 700');
