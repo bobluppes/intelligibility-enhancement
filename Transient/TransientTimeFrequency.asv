@@ -23,10 +23,9 @@ t = linspace(0, (n/Fs), n);
 Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*Fs/(2*pi);
 
-findchangepts(abs(H),'MaxNumChanges', 9, 'Statistic','linear');
+ipt = findchangepts(abs(H),'MaxNumChanges', 3, 'Statistic','linear');
 
-% figure;
-% plot(f, abs(H));
-% hold on;
-% plot(ipt/Fs);
+figure;
+plot(f, abs(H));
+hold on;
 
