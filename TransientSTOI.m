@@ -49,23 +49,40 @@ f = Omega*Fs/(2*pi);
 %freq = freq(0:4000);
 %freq = smoothdata(freq, 'movmedian', 800);
 
-q1 = bandpass(hps, [710 1500], Fs);
-q2 = bandpass(hps, [2200 2900], Fs);
-q3 = bandpass(hps, [3400 3900], Fs);
+d = [];
+center = [1000 2550 3700];
+bw = [20 50 100 300 500 700];
+for j = 1:6
+    q1 = bandpass(hps, [(center(1) - (bw(j)/2)) (center(1) + (bw(j)/2))], Fs);
+    q2 = bandpass(hps, [(center(2) - (bw(j)/2)) (center(2) + (bw(j)/2))], Fs);
+    q3 = bandpass(hps, [(center(3) - (bw(j)/2)) (center(3) + (bw(j)/2))], Fs);
+    
+    trans = hps - q1 - q2 - q3;
+    amplification = linspace(0, 25, 25);
+    trans = trans .* amplification;
+    improved = original + trans;
+    
+    % Normalize the improved signal power
+    Po = sum(abs(original));
+    Pi = sum(abs(improved));
+    a = Po ./ Pi;
+    improved = improved .* a;
+    
+    % Near-end noise
+    improved = improved + train;
+    %original = original + train;
 
-trans = hps - q1 - q2 - q3;
-amplification = linspace(1, 25, 50);
-trans = trans .* amplification;
-improved = original + trans;
+    for i = 1:length(improved(end,:))
+        d(i,j) = stoi(original, improved(:,i), Fs);
+    end
+end
 
-% Normalize the improved signal power
-Po = sum(abs(original));
-Pi = sum(abs(improved));
-a = Po ./ Pi;
-improved = improved .* a;
 
-I = fft(improved);
-I = fftshift(I);
+
+
+
+% I = fft(improved);
+% I = fftshift(I);
 
 % figure;
 % subplot(2,1,1);
@@ -87,19 +104,14 @@ I = fftshift(I);
 % xlabel('Frequency [Hz]');
 % ylabel('Amplitude');
 
-% Near-end noise
-improved = improved + train;
-%original = original + train;
-
-%sound(improved, Fs);
-
-d = [];
-for i = 1:50
-    d(i) = stoi(original, improved(:,i), Fs);
-end
-
 figure;
-plot(amplification, d);
+plot(amplification, d(:,1));
+hold on;
+for i = 2:length(d(end,:))
+    plot(amplification, d(:,i));
+end
+hold off;
 title('STOI Improved Signal');
 xlabel('Transient Amplification');
 ylabel('Intelligibility [%]');
+legend('BW 20', 'BW 50', 'BW 100', 'BW 300', 'BW 500', 'BW 700');
