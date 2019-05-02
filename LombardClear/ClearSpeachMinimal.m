@@ -2,7 +2,7 @@ clear all;
 close all;
 
 % Load audio signal
-[original,Fs] = audioread('clean_speech.wav');
+[original,Fs] = audioread('../Sounds/clean_speech.wav');
 Fn = Fs/2;
 n = length(original);
 m = 10000;

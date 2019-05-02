@@ -2,8 +2,8 @@ clear all;
 close all;
 
 % Load audio signal
-[original,Fs] = audioread('maleVoice.wav');
-[train, Fst] = audioread('Train-noise.wav');
+[original,Fs] = audioread('../Sounds/maleVoice.wav');
+[train, Fst] = audioread('../Sounds/Train-noise.wav');
 Fn = Fs/2;
 n = length(original);
 
