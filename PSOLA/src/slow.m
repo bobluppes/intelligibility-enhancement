@@ -1,4 +1,4 @@
-function WaveOut = slow(WaveIn, fs)
+function WaveOut = slow(WaveIn, fs, timeScale)
 
 %https://github.com/tiendung/voice-changer
 %--------------------------------------------------------------------------
@@ -7,7 +7,7 @@ function WaveOut = slow(WaveIn, fs)
 % config contain all parameter of this program
 global config;
 config.pitchScale           = 1;	%pitch scale ratio
-config.timeScale            = 1.2;	%time scale ratio
+config.timeScale            = timeScale;	%time scale ratio
 config.resamplingScale      = 1;		%resampling ratio to do formant shifting
 config.reconstruct          = 0;		%if true do low-band spectrum reconstruction
 config.displayPitchMarks    = 0;		%if true display pitch mark results
@@ -30,7 +30,7 @@ PitchContour = PitchEstimation(LowPass, fs);							%pitch contour estimation
 PitchMarking(WaveIn, PitchContour, fs);										%do pitch marking and PSOLA
 %audiowrite(config.fileOut, data.waveOut, fs);								%write output result to file
 
-WaveOut = waveOut;
+WaveOut = data.waveOut;
 
 % if config.playWavOut
 %     sound(data.waveOut, fs);
