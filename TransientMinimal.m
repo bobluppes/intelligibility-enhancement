@@ -25,24 +25,24 @@ f = Omega*Fs/(2*pi);
 
 %fvtool(hpf);
 
-% figure;
-% subplot(2,2,1);
-% plot(original);
-% title('malevoice.wav');
-% 
-% subplot(2,2,2);
-% plot(hps);
-% title('hps');
-% 
-% subplot(2,2,3);
-% plot(f,abs(O));
-% title('frequency spectrum');
-% xlim([0 4000]);
-% 
-% subplot(2,2,4);
-% plot(f,abs(H));
-% title('frequency spectrum hps');
-% xlim([0 4000]);
+figure;
+subplot(2,2,1);
+plot(original);
+title('malevoice.wav');
+
+subplot(2,2,2);
+plot(hps);
+title('hps');
+
+subplot(2,2,3);
+plot(f,abs(O));
+title('frequency spectrum');
+xlim([0 4000]);
+
+subplot(2,2,4);
+plot(f,abs(H));
+title('frequency spectrum hps');
+xlim([0 4000]);
 
 %Hfit = abs(H);
 %freq = fit(transpose(f),Hfit,'cubicinterp');
