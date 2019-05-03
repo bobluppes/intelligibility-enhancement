@@ -70,6 +70,7 @@ for i = 0:(steps - 2)
 end
 
 trans = trans * 12;
+original = original(1:length(trans),end);
 improved = original + trans;
 
 I = fftshift(fft(improved));
