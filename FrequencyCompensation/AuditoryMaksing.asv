@@ -25,8 +25,13 @@ noise = noise .* a;
 noise = bandpass(noise, [1950 2050], Fs);
 N = fftshift(fft(noise));
 
+figure;
+plot(f, abs(O));
+hold on;
+plot(f, abs(N));
+
 improved = transpose(original);
-q1 = bandpass(improved, [1900 2100], Fs) * 10;
+q1 = bandpass(improved, [1900 2100], Fs) * 5;
 improved = improved + q1;
 
 I = fftshift(fft(improved));
@@ -36,10 +41,5 @@ Po = sum(abs(O));
 Pi = sum(abs(I));
 a = Po / Pi;
 improved = improved .* a;
-
-figure;
-plot(f, abs(I));
-hold on;
-plot(f, abs(N));
 
 sound(improved + noise, Fs);
