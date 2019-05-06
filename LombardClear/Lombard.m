@@ -1,4 +1,5 @@
 % Question: Articles that implement Lombard-like Effect?
+% Question: Why soundsc instead of sound
 clear all;
 close all
 
@@ -20,7 +21,7 @@ Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*Fs/(2*pi);
 
 % Loop time segments
-thres = (0.2 * max(original)) * sampleInt;
+thres = (0.14 * max(original)) * sampleInt;
 improved = [];
 for i = 0:(steps - 2)
     % Take timeframe
@@ -30,7 +31,7 @@ for i = 0:(steps - 2)
     
     if pow > thres
         % Vowel
-        sound = transpose(slow(x, Fs, 1.5));
+        sound = transpose(slow(x, Fs, 3));
     else
         % Consonant
         sound = x;
@@ -41,5 +42,5 @@ for i = 0:(steps - 2)
 end
 
 
-sound(improved(1:end));
+soundsc(improved(1:end), Fs);
 
