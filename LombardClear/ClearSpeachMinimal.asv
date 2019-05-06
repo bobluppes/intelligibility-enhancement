@@ -3,8 +3,13 @@ clear all;
 close all;
 
 % Load audio signal
-[original,Fs] = audioread('speech_dft_8kHz.wav');
+[original,Fs] = audioread('Sounds/maleVoice.wav');
 Fn = Fs/2;
+
+load mtlb;
+original = [mtlb; mtlb; mtlb; mtlb];
+original = [original; original; ori
+
 n = length(original);
 m = 10000;
 
