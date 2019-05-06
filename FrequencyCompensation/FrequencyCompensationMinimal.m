@@ -1,3 +1,5 @@
+% Transforms signal into noise
+% Question: Is it useful to keep looking into this?
 clear all;
 close all;
 addpath('../Measures/')

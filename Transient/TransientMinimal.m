@@ -1,3 +1,5 @@
+% Amplifies transient components of speech signal, analyzed over entire
+% signal
 clear all;
 close all;
 

@@ -1,3 +1,4 @@
+% runs matlabs spectrum analyzer
 clear all;
 close all;
 
