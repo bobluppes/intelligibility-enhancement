@@ -48,14 +48,21 @@ for i = 1:length(F0)
     m2 = m2 + (F2(i) * f(i));
     m3 = m3 + (F3(i) * f(i));
 end
-m0 = m0 / (sum(abs(F0)));
-m1 = m1 / (sum(abs(F1)));
-m2 = m2 / (sum(abs(F2)));
-m3 = m3 / (sum(abs(F3)));
-
+if m0 ~= 0
+    m0 = m0 / (sum(abs(F0)));
+end
+if m1 ~= 0
+    m1 = m1 / (sum(abs(F1)));
+end
+if m2 ~= 0
+    m2 = m2 / (sum(abs(F2)));
+end
+if m3 ~= 0
+    m3 = m3 / (sum(abs(F3)));
+end
 
 % Determine formants around center frequencies
-f0 = bandpass(audio, [max((m0-450), 0) m0+450], Fs);
-f1 = bandpass(audio, [m1-450 m1+450], Fs);
-f2 = bandpass(audio, [m2-450 m2+450], Fs);
-f3 = bandpass(audio, [m3-450 m3+450], Fs);
+f0 = bandpass(audio, [max((m0-450), 50) m0+450], Fs);
+f1 = bandpass(audio, [max((m1-450), 50) m1+450], Fs);
+f2 = bandpass(audio, [max((m2-450), 50) m2+450], Fs);
+f3 = bandpass(audio, [max((m3-450), 50) m3+450], Fs);
