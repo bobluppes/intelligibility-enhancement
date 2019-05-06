@@ -11,6 +11,11 @@ bw = 300;
 [original,Fs] = audioread('Sounds/maleVoice.wav');
 [train, Fst] = audioread('Sounds/Train-noise.wav');
 Fn = Fs/2;
+
+% Option to use 'matlab' instead of audio file
+load mtlb;
+original = mtlb;
+
 n = length(original);
 
 % Train noise
