@@ -55,6 +55,13 @@ for i = 0:(steps - 2)
     trans = [trans; t];
 end
 
+% Last samples
+x = hps(round(((i+1)*sampleInt)+1):end,end);
+[f0, f1, f2, f3] = formants(x, Fs, 300);
+t = x - f0 - f1 - f2 - f3;
+trans = [trans; t];
+
+
 trans = trans * 12;
 original = original(1:length(trans),end);
 improved = original + trans;
