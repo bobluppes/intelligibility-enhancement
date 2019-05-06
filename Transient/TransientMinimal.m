@@ -11,7 +11,7 @@ train = resample(train, Fs, Fst);
 train = train(:,1);
 m = length(train);
 train = [train; zeros((n-m), 1)];
-train = train .* 0.9;
+train = train .* 0.5;
 
 O = fft(original);
 O = fftshift(O);
@@ -91,6 +91,6 @@ ylabel('Amplitude');
 
 % Near-end noise
 improved = improved + train;
-%original = original + train;
+original = original + train;
 
-sound(improved, Fs);
+sound(original, Fs);
