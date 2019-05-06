@@ -1,3 +1,6 @@
+% Plays competing signal in frequency band next to distortion
+% Only works for sinusoidal distortions 
+% Question: Is it useful to keep looking into this?
 clear all;
 close all;
 

@@ -1,3 +1,6 @@
+% Performance of Transient amplification according to SII measure for
+% different amplification factors
+% Question: Is this a useful measure for us?
 clear all;
 close all;
 

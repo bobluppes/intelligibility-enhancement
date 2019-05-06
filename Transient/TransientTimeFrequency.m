@@ -1,3 +1,5 @@
+% Amplification of transient components using time frequency decomposition
+% Question: What to do with last samples?
 clear all;
 close all;
 

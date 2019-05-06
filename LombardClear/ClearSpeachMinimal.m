@@ -1,3 +1,4 @@
+% Slow down original signal without changing pitch
 clear all;
 close all;
 

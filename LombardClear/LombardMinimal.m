@@ -1,9 +1,10 @@
+% Question: Articles that implement Lombard-like Effect?
 clear all;
 close all;
 
 % Load audio signal
-[original,Fs] = audioread('../Sounds/maleVoice.wav');
-[train, Fst] = audioread('../Sounds/Train-noise.wav');
+[original,Fs] = audioread('Sounds/maleVoice.wav');
+[train, Fst] = audioread('Sounds/Train-noise.wav');
 Fn = Fs/2;
 n = length(original);
 
@@ -13,6 +14,7 @@ t = linspace(0, (n/Fs), n);
 Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*Fs/(2*pi);
 
+%% Spectral tilting
 high = highpass(original,1650,Fs);
 mid = bandpass(original,[500 1650],Fs) .* 0.5;
 low = lowpass(original,500,Fs) .* 0.2;

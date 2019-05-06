@@ -1,3 +1,5 @@
+% Plays competing signal in frequency band next to distortion
+% Only works for sinusoidal distortions 
 clear all
 f = 2000;
 fs = 8000;
