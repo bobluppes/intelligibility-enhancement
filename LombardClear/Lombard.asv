@@ -7,20 +7,25 @@ close all;
 Fn = Fs/2;
 n = length(original);
 
-% Fourrier domain
-O = fftshift(fft(original));
+for i = 1:10
+    
+end
+
+[f0, f1, f2, f3] = formants(original, Fs);
+    
+F0 = fftshift(fft(f0));
+F1 = fftshift(fft(f1));
+F2 = fftshift(fft(f2));
+F3 = fftshift(fft(f3));
+
+n = length(F0);
 t = linspace(0, (n/Fs), n);
 Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*Fs/(2*pi);
 
-[f0, f1, f2, f3] = formants(original, Fs);
-
-F0 = fftshift(fft(f0));
-F0 = F0(round(length(F0)/2):end);
-f = f(round(length(f)/2):end);
-F = resample(abs(F0), 1, 1000);
-f = resample(f, 1, 1000);
-
-
 figure;
-plot(f, F);
+plot(f, abs(F0));
+hold on;
+plot(f, abs(F1));
+plot(f, abs(F2));
+plot(f, abs(F3));

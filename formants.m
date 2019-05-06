@@ -62,7 +62,7 @@ if m3 ~= 0
 end
 
 % Determine formants around center frequencies
-f0 = bandpass(audio, [max((m0-450), 50) m0+450], Fs);
-f1 = bandpass(audio, [max((m1-450), 50) m1+450], Fs);
-f2 = bandpass(audio, [max((m2-450), 50) m2+450], Fs);
-f3 = bandpass(audio, [max((m3-450), 50) m3+450], Fs);
+f0 = bandpass(audio, [max((m0-450), 50) min((m0+450), 950)], Fs);
+f1 = bandpass(audio, [max(max((m1-450), 1050), 50) min((m1+450), 1950)], Fs);
+f2 = bandpass(audio, [max(max((m2-450), 2050), 50) min((m2+450), 2950)], Fs);
+f3 = bandpass(audio, [max(max((m3-450), 3050), 50) min((m3+450), 3950)], Fs);
