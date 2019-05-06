@@ -5,9 +5,11 @@ function [f0, f1, f2, f3] = formants(audio, Fs, bw)
 % and the first three speech formants and return separate
 % time domain signals for each formants
 
-if bw > 450
-    bw = 450
+% Bandwidth constraints
+if bw > 900
+    bw = 900
 end
+bw = bw / 2;
 
 % Fourrier domain
 A = fftshift(fft(audio));
@@ -67,6 +69,6 @@ end
 
 % Determine formants around center frequencies
 f0 = bandpass(audio, [max((m0-bw), 50) min((m0+bw), 950)], Fs);
-f1 = bandpass(audio, [max(max((m1-bw), 1050), 50) min((m1+bw), 1950)], Fs);
-f2 = bandpass(audio, [max(max((m2-bw), 2050), 50) min((m2+bw), 2950)], Fs);
-f3 = bandpass(audio, [max(max((m3-bw), 3050), 50) min((m3+bw), 3950)], Fs);
+f1 = bandpass(audio, [max((m1-bw), 50) min((m1+bw), 1950)], Fs);
+f2 = bandpass(audio, [max((m2-bw), 50) min((m2+bw), 2950)], Fs);
+f3 = bandpass(audio, [max((m3-bw), 50) min((m3+bw), 3950)], Fs);

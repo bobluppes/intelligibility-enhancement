@@ -18,7 +18,7 @@ for i = 0:10
     int = round(length(original)/11);
     x = original(i*int+1:(i+1)*int);
     
-    [f0, f1, f2, f3] = formants(x, Fs, 450);
+    [f0, f1, f2, f3] = formants(x, Fs, 900);
     
     for j = 1:length(x)
        scope([f0(j), f1(j), f2(j), f3(j)]); 
