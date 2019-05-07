@@ -30,3 +30,24 @@ subplot(2,2,3);
 plot(f, abs(O));
 subplot(2,2,4);
 plot(f, abs(I));
+
+sii_old = [];
+sii_new = [];
+snr = [];
+for i = 1:10
+    n = (y - x) ./ i;
+    
+    snr(i) = sum(abs(n));
+    
+    [xn si so]  = sii_opt(x, n, fs);
+    
+    sii_old(i) = si;
+    sii_new(i) = so;
+end
+
+figure;
+plot(sii_old);
+hold on;
+plot(sii_new);
+legend('original', 'improved');
+
