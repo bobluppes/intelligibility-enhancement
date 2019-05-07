@@ -4,8 +4,8 @@ clear all;
 close all;
 addpath('../Measures/')
 % Load audio signal
-[original,Fs] = audioread('../Sounds/maleVoice.wav');
-[train, Fst] = audioread('../Sounds/Train-noise.wav');
+[original,Fs] = audioread('Sounds/maleVoice.wav');
+[train, Fst] = audioread('Sounds/Train-noise.wav');
 Fn = Fs/2;
 n = length(original);
 
@@ -14,7 +14,7 @@ train = resample(train, Fs, Fst);
 train = train(:,1);
 m = length(train);
 train = [train; zeros((n-m), 1)];
-train = train .* 0.9;
+train = train .* 0.6;
 
 % Fourrier transforms
 T = fft(train);
@@ -64,6 +64,8 @@ plot(f, SNR1);
 subplot(2,2,4);
 plot(f, SNR2);
 
+%sound(improved, Fs);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Option 2: don't compete with noise
 % Most noise power is between 0 and 800 Hz
@@ -101,6 +103,8 @@ plot(f, SNR1);
 
 subplot(2,2,4);
 plot(f, SNR2);
+
+%sound(improved, Fs);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Option 3: remove unneccessary frequency bands
