@@ -79,11 +79,11 @@ for j = 1:6
     improved = improved .* a;
     
     % Near-end noise
-    improved = improved + train;
+    %improved = improved + train;
     %original = original + train;
 
     for i = 1:length(improved(end,:))
-        d(i,j) = SIIB_Gauss(original, improved(:,i), Fs);
+        d(i,j) = SIIB_Gauss(improved(:,i), improved(:,i)+train, Fs);
         % compute SIIB^Gauss for different stimuli
         %siib_gauss(i) = SIIB_Gauss(x,y,fs);
     end
