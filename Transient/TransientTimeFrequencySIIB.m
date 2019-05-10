@@ -5,7 +5,7 @@ close all;
 
 % Variables
 timeInt = 0.1; % 100ms
-bw = 300;
+bw = 700;
 
 % Load audio signal
 [original,Fs] = audioread('Sounds/maleVoice.wav');
@@ -53,15 +53,15 @@ for i = 0:(steps - 2)
         t = x;
         
         if locations(4) > 0
-            q1 = bandpass(x, [max((locations(4) - (bw/2)), 0) (locations(4) + (bw/2))], Fs);
+            q1 = bandpass(x, [max((locations(4) - (bw/2)), 50) (locations(4) + (bw/2))], Fs);
             t = t - q1;
         end
         if locations(5) > 0
-            q2 = bandpass(x, [max((locations(5) - (bw/2)), 0) (locations(5) + (bw/2))], Fs);
+            q2 = bandpass(x, [max((locations(5) - (bw/2)), 50) (locations(5) + (bw/2))], Fs);
             t = t - q2;
         end
         if locations(6) > 0
-            q3 = bandpass(x, [max((locations(6) - (bw/2)), 0) (locations(6) + (bw/2))], Fs);
+            q3 = bandpass(x, [max((locations(6) - (bw/2)), 50) (locations(6) + (bw/2))], Fs);
             t = t - q3;
         end
     else
@@ -98,7 +98,7 @@ end
 
 figure;
 plot(amplification, sti);
-title('STOI Improved Signal');
+title('STOI Improved Signal bw=700');
 ylabel('Intelligibility');
 xlabel('Transient Amplification');
 

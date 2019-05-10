@@ -52,12 +52,7 @@ for i = 1:steps
     % Calculate formant center frequencies
     X_t = fftshift(fft(x_t));
     Smooth = smooth(f, abs(X_t), 0.1, 'rloess');
-    % Check if there are peaks to be detected
-    max_data = max(Smooth);
-    locations = [];
-    if max_data >= 0.07
-        [peaks, locations] = findpeaks(Smooth, f, 'MinPeakDistance', 500, 'NPeaks', 6, 'MinPeakHeight', 0.07);
-    end
+    [peaks, locations] = findpeaks(Smooth, f, 'MinPeakDistance', 500, 'NPeaks', 6, 'MinPeakHeight', 0.07);
     
     % Initialize transient part
     t = x_t;
@@ -87,12 +82,6 @@ end
 trans = trans * amplification;
 improved = original + trans;
 
-% Normalize energy
-O = fftshift(fft(original));
-I = fftshift(fft(improved));
-Po = sum(abs(O));
-Pi = sum(abs(I));
-a = Po ./ Pi;
-AudioOut = improved .* a;
+%
 
 

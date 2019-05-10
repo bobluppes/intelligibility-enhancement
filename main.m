@@ -1,7 +1,17 @@
 clear all;
 close all
 
+clear all;
+close all;
 timeInt = 0.1; % 100ms
+
+% Load audio signal
+[original,Fs] = audioread('Sounds/maleVoice.wav');
+
+improved = Transient(original, Fs, 5);
+
+sound(improved, Fs);
+
 
 % Load audio signal
 [original,Fs] = audioread('clean_speech.wav');
