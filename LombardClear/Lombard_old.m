@@ -3,7 +3,7 @@
 clear all;
 close all
 
-timeInt = 0.05; % 100ms
+timeInt = 0.1; % 100ms
 
 % Load audio signal
 [original,Fs] = audioread('clean_speech.wav');
@@ -21,7 +21,7 @@ Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*Fs/(2*pi);
 
 % Loop time segments
-thres = (0.1 * max(original)) * sampleInt;
+thres = (0.13 * max(original)) * sampleInt;
 improved = [];
 for i = 0:(steps - 2)
     % Take timeframe

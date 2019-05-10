@@ -7,14 +7,13 @@ function [f0, f1, f2, f3] = formants(audio, Fs, bw)
 
 % Bandwidth constraints
 if bw > 900
-    bw = 900
+    bw = 900;
 end
 bw = bw / 2;
 
 % Fourrier domain
 A = fftshift(fft(audio));
 n = length(A);
-t = linspace(0, (n/Fs), n);
 Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*Fs/(2*pi);
 
