@@ -7,9 +7,9 @@ t = linspace(0, (n/Fs), n);
 Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*Fs/(2*pi);
 
-Fc = 500;                                 % Desired Output Frequency   
+Fc = 300;                                 % Desired Output Frequency   
 carrier = sin(2*pi*(Fc)*t);               % Generate Carrier 
-sm = transpose(f0) .* carrier;                          % Modulate (Produces Upper & Lower Sidebands
+sm = transpose(f0) .* carrier;             % Modulate (Produces Upper & Lower Sidebands
 Fn = Fs/2;                                  % Design High-Pass Filter To Eliminate Lower Sideband
 Wp = Fc/Fn;
 Ws = Wp*0.8;
