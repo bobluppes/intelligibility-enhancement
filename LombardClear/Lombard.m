@@ -3,10 +3,10 @@
 clear all;
 close all
 
-timeInt = 0.08; % 100ms
+timeInt = 0.05; % 100ms
 
 % Load audio signal
-[original,Fs] = audioread('speech_dft_8kHz.wav');
+[original,Fs] = audioread('clean_speech.wav');
 [train, Fst] = audioread('Sounds/Train-noise.wav');
 Fn = Fs/2;
 n = length(original);
@@ -21,7 +21,7 @@ Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*Fs/(2*pi);
 
 % Loop time segments
-thres = (0.13 * max(original)) * sampleInt;
+thres = (0.1 * max(original)) * sampleInt;
 improved = [];
 for i = 0:(steps - 2)
     % Take timeframe
@@ -41,28 +41,32 @@ for i = 0:(steps - 2)
     
 end
 
-[f0, f1, f2, f3] = formants(improved, Fs, 900);
+% [f0, f1, f2, f3] = formants(improved, Fs, 900);
+% 
+% n = length(improved);
+% t = linspace(0, (n/Fs), n);
+% Omega = pi*[-1 : 2/n : 1-1/n];
+% f = Omega*Fs/(2*pi);
+% 
+% Fc = 500;                                 % Desired Output Frequency   
+% carrier = sin(2*pi*(Fc)*t);               % Generate Carrier 
+% sm = transpose(f0) .* carrier;                          % Modulate (Produces Upper & Lower Sidebands
+% Fn = Fs/2;                                  % Design High-Pass Filter To Eliminate Lower Sideband
+% Wp = Fc/Fn;
+% Ws = Wp*0.8;
+% [n,Wn] = buttord(Wp, Ws, 1, 10);
+% [b,a] = butter(n,Wn,'high');
+% [sos,g] = tf2sos(b,a);
+% f0 = transpose(2*filtfilt(sos,g,sm));
+% 
+% Spectral tilting
+% improved = f0 * 0.1 + f1 * 0.3 + f2 * 0.7 + f3 * 0.8;
 
-n = length(improved);
+I = fftshift(fft(improved));
+n = length(I);
 t = linspace(0, (n/Fs), n);
 Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*Fs/(2*pi);
-
-Fc = 500;                                 % Desired Output Frequency   
-carrier = sin(2*pi*(Fc)*t);               % Generate Carrier 
-sm = transpose(f0) .* carrier;                          % Modulate (Produces Upper & Lower Sidebands
-Fn = Fs/2;                                  % Design High-Pass Filter To Eliminate Lower Sideband
-Wp = Fc/Fn;
-Ws = Wp*0.8;
-[n,Wn] = buttord(Wp, Ws, 1, 10);
-[b,a] = butter(n,Wn,'high');
-[sos,g] = tf2sos(b,a);
-f0 = transpose(2*filtfilt(sos,g,sm));
-
-% Spectral tilting
-improved = f0 * 0.1 + f1 * 0.3 + f2 * 0.7 + f3 * 0.8;
-
-I = fftshift(fft(improved));
 
 % Normalize the improved signal power
 Po = sum(abs(O));
