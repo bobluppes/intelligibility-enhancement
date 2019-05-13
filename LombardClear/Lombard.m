@@ -1,5 +1,5 @@
 function improved = Lombard(original, Fs, snr, timeInt)
-% set values (dependend on SNR??)
+% parameters (dependend on SNR??)
 extension = 3;
 tilt = 0;
 

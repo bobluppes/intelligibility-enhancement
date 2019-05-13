@@ -18,8 +18,9 @@ noise = [n; zeros((length(x)-length(n)), 1)] .* 0.9;
 
 siib_y = [];
 amplification = linspace(8, 15, 25);
+trans = transient_process (x, fs);
 for i = 1:length(amplification)
-    y = Transient(x, fs, amplification(i));
+    y = transient_amplify(x, trans, amplification(i));
     siib_y(i) = SIIB_Gauss(y, y+noise, fs);
 end
 

@@ -10,7 +10,7 @@ global data;
 [u, v] = UVSplit(p);
 
 %  pitch marking for voiced segments
-if ((sum(u(:,1))&& sum(u(:,2)) && sum(v))>0)
+if (sum(sum(u)') > 0) && (sum(sum(v)')>0)
     pm = [];
     ca = [];
     first = 1;
