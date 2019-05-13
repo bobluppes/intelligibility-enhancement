@@ -1,4 +1,4 @@
-function AudioOut = Transient(x, fs, snr)
+function AudioOut = Transient(x, fs, amplification)
 
 % Make the input signal x more intelligible by increasing the power in the
 % transient parts in frequency domain.
@@ -6,7 +6,7 @@ function AudioOut = Transient(x, fs, snr)
 % Parameters
 timeInt = 0.1;              % 100ms
 bw = 300;                   % Bandwidth of formant bandpass filters
-amplification = 12.;        % The amplification of the transient part
+%amplification = 12.5;        % The amplification of the transient part
                             % This should be calculated from snr
 
 % Input signal parameters
