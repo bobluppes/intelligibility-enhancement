@@ -93,7 +93,7 @@ train = train(1:length(improved));
 
 sti = [];
 for i = 1:length(amplification)
-    sti(i) = stoi(improved(:,i), improved(:,i)+train, Fs);
+    sti(i) = SIIB_Gauss(improved(:,i), improved(:,i)+train, Fs);
 end
 
 figure;

@@ -1,10 +1,10 @@
-function trans = transient_process (x, fs)
+function trans = transient_process (x, fs, bw)
 % Make the input signal x more intelligible by increasing the power in the
 % transient parts in frequency domain.
 
 % Parameters
 timeInt = 0.1;              % 100ms
-bw = 300;                   % Bandwidth of formant bandpass filters
+%bw = 700;                   % Bandwidth of formant bandpass filters
 %amplification = 12.5;        % The amplification of the transient part
                             % This should be calculated from snr
 
@@ -54,7 +54,7 @@ for i = 1:steps
     % Check if there are peaks to be detected
     max_data = max(Smooth);
     locations = [];
-    if max_data >= 0.07
+    if (max_data >= 0.07) || true
         [peaks, locations] = findpeaks(Smooth, f, 'MinPeakDistance', 500, 'NPeaks', 6, 'MinPeakHeight', 0.07);
     end
     
