@@ -56,20 +56,20 @@ for i = 1:steps
     X_t = fftshift(fft(x_t));
     df = timeLength/fs;
     
-    mask1 = [zeros(round(720*df)+length(X_t)/2,1); ones(round((1980-720)*df), 1)];
+    mask1 = [zeros(round(720*df)+round(length(X_t)/2),1); ones(round((1980-720)*df), 1)];
     mask1 = [mask1; zeros(length(X_t) - length(mask1),1)];
-    start1 = round(720*df)+length(X_t)/2;
-    stop1 = round(1980*df)+length(X_t)/2;
+    start1 = round(720*df)+round(length(X_t)/2);
+    stop1 = round(1980*df)+round(length(X_t)/2);
     
-    mask2 = [zeros(round(2020*df)+length(X_t)/2,1); ones(round((2980-2020)*df), 1)];
+    mask2 = [zeros(round(2020*df)+round(length(X_t)/2),1); ones(round((2980-2020)*df), 1)];
     mask2 = [mask2; zeros(length(X_t) - length(mask2),1)];
-    start2 = round(2020*df)+length(X_t)/2;
-    stop2 = round(2980*df)+length(X_t)/2;
+    start2 = round(2020*df)+round(length(X_t)/2);
+    stop2 = round(2980*df)+round(length(X_t)/2);
     
-    mask3 = [zeros(round(3020*df)+length(X_t)/2,1); ones(round((3980-3020)*df), 1)];
+    mask3 = [zeros(round(3020*df)+round(length(X_t)/2),1); ones(round((3980-3020)*df), 1)];
     mask3 = [mask3; zeros(length(X_t) - length(mask3),1)];
-    start3 = round(3020*df)+length(X_t)/2;
-    stop3 = round(3980*df)+length(X_t)/2;
+    start3 = round(3020*df)+round(length(X_t)/2);
+    stop3 = round(3980*df)+round(length(X_t)/2);
     
     F1 = X_t .* mask1;
     F2 = X_t .* mask2;
@@ -78,7 +78,7 @@ for i = 1:steps
     d = linspace(start1, stop1, 6);
     power = [];
     for k = 1:5
-        ff = F1(d(k):d(k+1));
+        ff = F1(round(d(k)):round(d(k+1)));
         power(k) = sum(abs(ff));
     end
     [M index] = max(power);
@@ -87,7 +87,7 @@ for i = 1:steps
     d = linspace(start2, stop2, 6);
     power = [];
     for k = 1:5
-        ff = F2(d(k):d(k+1));
+        ff = F2(round(d(k)):round(d(k+1)));
         power(k) = sum(abs(ff));
     end
     [M index] = max(power);
@@ -96,16 +96,16 @@ for i = 1:steps
     d = linspace(start3, stop3, 6);
     power = [];
     for k = 1:5
-        ff = F3(d(k):d(k+1));
+        ff = F3(round(d(k)):round(d(k+1)));
         power(k) = sum(abs(ff));
     end
     [M index] = max(power);
     center3 = f(round((d(index) + d(index+1))/2));
     
     t = x_t;
-    q1 = bandpass(x_t, [max((center1 - (bw/2)), 50) (center1 + (bw/2))], fs);
-    q2 = bandpass(x_t, [max((center2 - (bw/2)), 50) (center2 + (bw/2))], fs);
-    q3 = bandpass(x_t, [max((center3 - (bw/2)), 50) (center3 + (bw/2))], fs);
+    q1 = bandpass(x_t, [max((center1 - (bw/2)), 50) min((center1 + (bw/2)), 3980)], fs);
+    q2 = bandpass(x_t, [max((center2 - (bw/2)), 50) min((center2 + (bw/2)), 3980)], fs);
+    q3 = bandpass(x_t, [max((center3 - (bw/2)), 50) min((center3 + (bw/2)), 3980)], fs);
     t = t - q1 - q2 - q3;
     
     % Append transient part to trans signal

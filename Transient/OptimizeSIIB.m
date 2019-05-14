@@ -17,8 +17,8 @@ n = n(:,1);
 noise = [n; zeros((length(x)-length(n)), 1)] .* 0.9;
 
 siib_y = [];
-amplification = linspace(0, 15, 30);
-bands = linspace(800, 900, 2);
+amplification = linspace(0, 20, 100);
+bands = linspace(20, 900, 100);
 bar = waitbar(0,'Decomposing Transients');
 for i = 1:length(bands)
     waitbar((i/length(bands)), bar, 'Decomposing Transients');
@@ -48,10 +48,13 @@ xlabel('Transient Amplification');
 ylabel('SIIB [b/s]');
 legend show;
 
+
 figure;
 waterfall(amplification, bands, siib_y)
 xlabel('Transient Amplification');
 ylabel('Filter Bandwidth [Hz]');
 zlabel('SIIB [bits/s]');
+
+
 
 
