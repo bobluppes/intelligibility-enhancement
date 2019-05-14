@@ -18,7 +18,7 @@ noise = [n; zeros((length(x)-length(n)), 1)] .* 0.9;
 
 siib_y = [];
 amplification = linspace(0, 15, 30);
-bands = linspace(20, 800, 15);
+bands = linspace(800, 900, 2);
 bar = waitbar(0,'Decomposing Transients');
 for i = 1:length(bands)
     waitbar((i/length(bands)), bar, 'Decomposing Transients');

@@ -31,7 +31,11 @@ f = Omega*fs/(2*pi);
 % These parts are appended to 'trans' which will become the transient part
 % of x
 trans = [];
+progress = waitbar(0,'Time Decomposition');
 for i = 1:steps
+    
+    waitbar((i/steps), progress, 'Time Decomposition');
+    
     % Take x_t
     start_index = (i-1) * sampleInt + 1;
     % Check if this is the last segment
@@ -47,44 +51,65 @@ for i = 1:steps
         end_index = start_index + sampleInt - 1;
     end
     x_t = x(start_index:end_index);
+    timeLength = end_index - start_index + 1;
     
-    % Decompose into assumed formants
-    f1 = bandpass(x_t, [720 1980], fs);
-    f2 = bandpass(x_t, [2020 2980], fs);
-    f3 = bandpass(x_t, [3020 3980], fs);
+    X_t = fftshift(fft(x_t));
+    df = timeLength/fs;
     
-    % Calculate power per bin and determine center frequency
-    k = linspace(720, 1980, 10);
-    for l = 1:(length(k) - 1)
-        ff = bandpass(x, [k(l) k(l+1)], fs);
-        power(l) = sum(abs(ff));
+    mask1 = [zeros(round(720*df)+length(X_t)/2,1); ones(round((1980-720)*df), 1)];
+    mask1 = [mask1; zeros(length(X_t) - length(mask1),1)];
+    start1 = round(720*df)+length(X_t)/2;
+    stop1 = round(1980*df)+length(X_t)/2;
+    
+    mask2 = [zeros(round(2020*df)+length(X_t)/2,1); ones(round((2980-2020)*df), 1)];
+    mask2 = [mask2; zeros(length(X_t) - length(mask2),1)];
+    start2 = round(2020*df)+length(X_t)/2;
+    stop2 = round(2980*df)+length(X_t)/2;
+    
+    mask3 = [zeros(round(3020*df)+length(X_t)/2,1); ones(round((3980-3020)*df), 1)];
+    mask3 = [mask3; zeros(length(X_t) - length(mask3),1)];
+    start3 = round(3020*df)+length(X_t)/2;
+    stop3 = round(3980*df)+length(X_t)/2;
+    
+    F1 = X_t .* mask1;
+    F2 = X_t .* mask2;
+    F3 = X_t .* mask3;
+    
+    d = linspace(start1, stop1, 6);
+    power = [];
+    for k = 1:5
+        ff = F1(d(k):d(k+1));
+        power(k) = sum(abs(ff));
     end
     [M index] = max(power);
-    center1 = (k(index) + k(index+1))/2;
-    k = linspace(2020, 2980, 10);
-    for l = 1:(length(k) - 1)
-        ff = bandpass(x, [k(l) k(l+1)], fs);
-        power(l) = sum(abs(ff));
-    end
-    [M index] = max(power);
-    center2 = (k(index) + k(index+1))/2;
-    k = linspace(3020, 3980, 10);
-    for l = 1:(length(k) - 1)
-        ff = bandpass(x, [k(l) k(l+1)], fs);
-        power(l) = sum(abs(ff));
-    end
-    [M index] = max(power);
-    center3 = (k(index) + k(index+1))/2;
+    center1 = f(round((d(index) + d(index+1))/2));
     
-    % Initialize transient part
+    d = linspace(start2, stop2, 6);
+    power = [];
+    for k = 1:5
+        ff = F2(d(k):d(k+1));
+        power(k) = sum(abs(ff));
+    end
+    [M index] = max(power);
+    center2 = f(round((d(index) + d(index+1))/2));
+    
+    d = linspace(start3, stop3, 6);
+    power = [];
+    for k = 1:5
+        ff = F3(d(k):d(k+1));
+        power(k) = sum(abs(ff));
+    end
+    [M index] = max(power);
+    center3 = f(round((d(index) + d(index+1))/2));
+    
     t = x_t;
-    
     q1 = bandpass(x_t, [max((center1 - (bw/2)), 50) (center1 + (bw/2))], fs);
     q2 = bandpass(x_t, [max((center2 - (bw/2)), 50) (center2 + (bw/2))], fs);
     q3 = bandpass(x_t, [max((center3 - (bw/2)), 50) (center3 + (bw/2))], fs);
-    
     t = t - q1 - q2 - q3;
     
     % Append transient part to trans signal
     trans = [trans; t];
 end
+
+delete(progress);
