@@ -166,7 +166,7 @@ for i = 1:length(frames)
 end
 
 x_dB_sort = sort(x_dB);
-max_x = x_dB_sort(round(length(x_dB)*0.999)); % find the 99.9 percentile
+max_x = x_dB_sort(round(length(x_dB)*0.899)); % find the 99.9 percentile
 vad_ind = find(x_dB>max_x - range);
 
 %%

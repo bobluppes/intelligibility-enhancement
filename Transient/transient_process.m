@@ -48,35 +48,42 @@ for i = 1:steps
     end
     x_t = x(start_index:end_index);
     
-    % Calculate formant center frequencies
-    X_t = fftshift(fft(x_t));
-    Smooth = smooth(f, abs(X_t), 0.1, 'rloess');
-    % Check if there are peaks to be detected
-    max_data = max(Smooth);
-    locations = [];
-    if (max_data >= 0.07) || true
-        [peaks, locations] = findpeaks(Smooth, f, 'MinPeakDistance', 500, 'NPeaks', 6, 'MinPeakHeight', 0.07);
+    % Decompose into assumed formants
+    f1 = bandpass(x_t, [720 1980], fs);
+    f2 = bandpass(x_t, [2020 2980], fs);
+    f3 = bandpass(x_t, [3020 3980], fs);
+    
+    % Calculate power per bin and determine center frequency
+    k = linspace(720, 1980, 10);
+    for l = 1:(length(k) - 1)
+        ff = bandpass(x, [k(l) k(l+1)], fs);
+        power(l) = sum(abs(ff));
     end
+    [M index] = max(power);
+    center1 = (k(index) + k(index+1))/2;
+    k = linspace(2020, 2980, 10);
+    for l = 1:(length(k) - 1)
+        ff = bandpass(x, [k(l) k(l+1)], fs);
+        power(l) = sum(abs(ff));
+    end
+    [M index] = max(power);
+    center2 = (k(index) + k(index+1))/2;
+    k = linspace(3020, 3980, 10);
+    for l = 1:(length(k) - 1)
+        ff = bandpass(x, [k(l) k(l+1)], fs);
+        power(l) = sum(abs(ff));
+    end
+    [M index] = max(power);
+    center3 = (k(index) + k(index+1))/2;
     
     % Initialize transient part
     t = x_t;
-    % Check if all the right peaks are detected
-    if length(locations) == 6
-        
-        if locations(4) > 0
-            q1 = bandpass(x_t, [max((locations(4) - (bw/2)), 50) (locations(4) + (bw/2))], fs);
-            t = t - q1;
-        end
-        if locations(5) > 0
-            q2 = bandpass(x_t, [max((locations(5) - (bw/2)), 50) (locations(5) + (bw/2))], fs);
-            t = t - q2;
-        end
-        if locations(6) > 0
-            q3 = bandpass(x_t, [max((locations(6) - (bw/2)), 50) (locations(6) + (bw/2))], fs);
-            t = t - q3;
-        end
-        
-    end
+    
+    q1 = bandpass(x_t, [max((center1 - (bw/2)), 50) (center1 + (bw/2))], fs);
+    q2 = bandpass(x_t, [max((center2 - (bw/2)), 50) (center2 + (bw/2))], fs);
+    q3 = bandpass(x_t, [max((center3 - (bw/2)), 50) (center3 + (bw/2))], fs);
+    
+    t = t - q1 - q2 - q3;
     
     % Append transient part to trans signal
     trans = [trans; t];

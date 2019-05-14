@@ -17,29 +17,41 @@ n = n(:,1);
 noise = [n; zeros((length(x)-length(n)), 1)] .* 0.9;
 
 siib_y = [];
-amplification = linspace(0, 20, 100);
-bands = [20 50 100 200 300 400 500 600 700];
-for i = 1:9
+amplification = linspace(0, 15, 30);
+bands = linspace(20, 800, 15);
+bar = waitbar(0,'Decomposing Transients');
+for i = 1:length(bands)
+    waitbar((i/length(bands)), bar, 'Decomposing Transients');
     trans(i,:) = transient_process (x, fs, bands(i));
 end
+delete(bar);
 
+bar = waitbar(0,'Calculating SIIB');
 for i = 1:length(amplification)
-    amplification(i)
+    waitbar((i/length(amplification)), bar, 'Calculating SIIB');
     
-    for j = 1:9
-        y(j,:) = transient_amplify(x, transpose(trans(j,:)), amplification(i));
-        siib_y(j,i) = SIIB_Gauss(transpose(y(j,:)), transpose(y(j,:))+noise, fs);
+    for j = 1:length(bands)
+        y = transient_amplify(x, transpose(trans(j,:)), amplification(i));
+        siib_y(j,i) = SIIB_Gauss(y, y+noise, fs);
     end
 end
+delete(bar);
 
 figure;
-plot(amplification, siib_y(1,:));
+plot(amplification, siib_y(1,:), 'DisplayName', num2str(bands(1)));
 hold on;
-for i = 2:9
-    plot(amplification, siib_y(i,:));
+for i = 2:length(bands)
+    plot(amplification, siib_y(i,:), 'DisplayName', num2str(bands(i)));
 end
 title('SIIB TF-Decomposed');
 xlabel('Transient Amplification');
 ylabel('SIIB [b/s]');
-legend('300', '500', '700');
+legend show;
+
+figure;
+waterfall(amplification, bands, siib_y)
+xlabel('Transient Amplification');
+ylabel('Filter Bandwidth [Hz]');
+zlabel('SIIB [bits/s]');
+
 
