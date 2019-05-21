@@ -11,7 +11,7 @@ steps = round(n/sampleInt);
 %extend vowels and spectral tilt
 thres = (0.1 * max(original)) * sampleInt;
 improved = extend_vowels(original, Fs, extension, sampleInt, thres, steps);
-improved = spectral_tilt(improved, Fs);
+%improved = spectral_tilt(improved, Fs);
 
 % Fourier Transform of original and improved signals
 O = fft(original);
