@@ -11,7 +11,7 @@ steps = round(n/sampleInt);
 %extend vowels and spectral tilt
 thres = (0.1 * max(original)) * sampleInt;
 improved = extend_vowels(original, Fs, extension, sampleInt, thres, steps);
-%improved = spectral_tilt(improved, Fs);
+improved = spectral_tilt(improved, -0.6);
 
 % Fourier Transform of original and improved signals
 O = fft(original);
@@ -23,6 +23,9 @@ Po = sum(abs(O));
 Pi = sum(abs(I));
 a = Po / Pi;
 improved = improved .* a;
+
+% Dynamic range compression
+improved = compress(improved, -20);
 
 
 
