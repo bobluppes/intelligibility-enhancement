@@ -1,12 +1,12 @@
 clear all;
 close all
 
-timeInt = 0.5; % 100ms
+timeInt = -0.9; % 100ms
 
 % Load audio signal
-[original,Fs] = audioread('Sounds/maleVoice.wav');
+%[original,Fs] = audioread('Sounds/maleVoice.wav');
 
-improved = Transient(original, Fs, 5);
+%improved = Transient(original, Fs, 5);
 
 %sound(improved, Fs);
 
@@ -15,9 +15,9 @@ improved = Transient(original, Fs, 5);
 [train, Fst] = audioread('Sounds/Train-noise.wav');
 
 
-%improved = Lombard(original, Fs, 0, timeInt);
+improved = Lombard(original, Fs, 0, timeInt);
 
-%soundsc(improved(1:end), Fs);
+soundsc(improved(1:end), Fs);
 
 %% plots of improved and original in time and frequency domain
 I = fftshift(fft(improved));
