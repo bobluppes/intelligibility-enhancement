@@ -8,66 +8,44 @@ close all;
 n = resample(n, fs, fst);
 n = n(:,1);
 
-% noise = [];
-% for i = 1:10
-%     amp = i/10;
-%     noise(:,i) = [n; zeros((length(x)-length(n)), 1)] .* amp;
-% end
-
-noise = [n; zeros((length(x)-length(n)), 1)] .* 0.4;
-
-siib_y = [];
-amplification = linspace(0, 20, 40);
-bands = [216 900];
-bar = waitbar(0,'Decomposing Transients');
-for i = 1:length(bands)
-    waitbar((i/length(bands)), bar, 'Decomposing Transients');
-    trans(i,:) = transient_process (x, fs, bands(i));
+amp = linspace(2,0,20);
+noise = [];
+for i = 1:length(amp)
+    noise(:,i) = [n; zeros((length(x)-length(n)), 1)] .* amp(i);
 end
-delete(bar);
+
+siib = [];
+snr = [];
+amplification = linspace(0, 40, 80);
+band = 216;
+trans = transient_process(x, fs, band);
 
 bar = waitbar(0,'Calculating SIIB');
 for i = 1:length(amplification)
     waitbar((i/length(amplification)), bar, 'Calculating SIIB');
     
-    for j = 1:1
-        y = transient_amplify(x, transpose(trans(j,:)), amplification(i));
-        stoi_y(j,i) = stoi(y, y+noise, fs);
-        siib_y(j,i) = SIIB_Gauss(y, y+noise, fs);
+    y = transient_amplify(x, trans, amplification(i));
+    Y = fftshift(fft(y));
+    Py = sum(abs(Y));
+    
+    for j = 1:size(noise, 2)
+        siib(i,j) = SIIB_Gauss(y, y+noise(:,j), fs);
+        
+        if (i == 1)
+            N = fftshift(fft(noise(:,j)));
+            Pn = sum(abs(N));
+            snr(j) = 10*log(Py/Pn);
+        end
     end
 end
 delete(bar);
 
-% figure;
-% plot(amplification, siib_y(1,:), 'DisplayName', num2str(bands(1)));
-% hold on;
-% for i = 2:length(bands)
-%     plot(amplification, siib_y(i,:), 'DisplayName', num2str(bands(i)));
-% end
-% title('SIIB TF-Decomposed');
-% xlabel('Transient Amplification');
-% ylabel('SIIB [b/s]');
-% legend show;
-
-
 figure;
-%amplification = linspace(0, 20, 100);
-%subplot(2,1,1);
-%surf(amplification, bands, siib_y);
-plot(amplification, siib_y(1,:);
-hold on;
-plot(amplification, siib_y(2,:);
-
-amplification = linspace(0, 20, 25);
-subplot(2,1,2);
-surf(amplification, bands, siib_y .* 50);
-xlabel('Transient Amplification');
-ylabel('Filter Bandwidth [Hz]');
+surf(snr, amplification, siib);
+title('SIIB amplification vs snr');
+xlabel('SNR [dB]');
+ylabel('Amplification');
 zlabel('SIIB [bits/s]');
-
-figure;
-plot(amplification, siib_y(:,23));
-
 
 
 
