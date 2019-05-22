@@ -6,7 +6,7 @@ w       = w(:);
 
 % Remove frequency band weights
 for i = 1:length(w)
-    %w(i) = 1/length(w);
+    w(i) = 1/length(w);
 end
 
 msk_old = false(size(sig_x));

@@ -1,43 +1,19 @@
 clear all;
 close all
 
-timeInt = -0.9; % 100ms
-
-% Load audio signal
-%[original,Fs] = audioread('Sounds/maleVoice.wav');
-
-%improved = Transient(original, Fs, 5);
-
-%sound(improved, Fs);
-
 % Load audio signal
 [original,Fs] = audioread('clean_speech.wav');
 [train, Fst] = audioread('Sounds/Train-noise.wav');
+train = resample(train, Fs, Fst);
+train = train(:,1);
 
+noise = transpose(train(1:length(original)));
+Is = sii_opt(original, noise, Fs);
+Il = Lombard(original, Fs, 0, 0.01);
+noise_lombard = transpose(train(1:length(Il)));
+It = Transient(original, Fs);
 
-improved = Lombard(original, Fs, 0, timeInt);
-
-soundsc(improved(1:end), Fs);
-
-%% plots of improved and original in time and frequency domain
-I = fftshift(fft(improved));
-O = fftshift(fft(original));
-n = length(I);
-t = linspace(0, (n/Fs), n);
-Omega = pi*[-1 : 2/n : 1-1/n];
-f = Omega*Fs/(2*pi);
-n = length(O);
-t = linspace(0, (n/Fs), n);
-Omega = pi*[-1 : 2/n : 1-1/n];
-f1 = Omega*Fs/(2*pi);
-
-
-figure;
-plot(original);
-hold on;
-plot(improved);
-
-figure;
-plot(f1, abs(O));
-hold on
-plot(f, abs(I));
+siib_original = SIIB_Gauss(original, original+noise, Fs);
+siib_sii_opt = SIIB_Gauss(Is, Is+noise, Fs);
+siib_lombard = SIIB_Gauss(Il, Il+noise_lombard, Fs);
+siib_transient = SIIB_Gauss(It, It+noise, Fs);
