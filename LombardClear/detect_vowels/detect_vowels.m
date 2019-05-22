@@ -21,17 +21,17 @@ for i = 1:(length(sfn)-1)
 end
 only_vowels = vowels.*original;
 figure
-subplot(2,2,1)
+%subplot(2,2,1)
 as = linspace(1,length(original),length(sfn));
 plot(as,sfn+6.5);
 hold on
-plot([0,length(sfn)],[0.47,0.47])
+%plot([0,length(sfn)],[0.47,0.47])
 as2 = linspace(1,length(original),length(original));
 plot(as2,original);
 plot(as2,vowels);
 title('Log energy (more energy in vowels)')
-xlim([0 80000])
-%soundsc(only_vowels(1:80000),Fs)
+%xlim([0 80000])
+soundsc(only_vowels(1:80000),Fs)
 %% Zero crossings
 sfn = vowels_zero_crossings(original, Fs);
 vowels = zeros(length(original),1);

@@ -89,15 +89,15 @@ function [youts,youtn]=wsola_analysis(y,fs,alpha,nleng,nshift,wtype,deltamax,ipa
         xadd=y(nalpha-deltas+maxind-1:nalpha-deltas+maxind+nleng-2).*win(1:nleng);
         yout(nlin:nlin+nleng-1)=yout(nlin:nlin+nleng-1)+xadd;
         
-% debug printing
-    xx=1;
-    if (xx == 0)
-    fprintf('frame:%d, xideal:%d %d, xreal:%d %d, xadd:%d %d, yout:%d %d maxind: %d \n',...
-        fno,nideal,nideal+nleng-1,indexl,nalpha+nleng-1+deltas,...
-        nalpha-deltas+maxind-1,nalpha-deltas+maxind+nleng-2,nlin,nlin+nleng-1,maxind);
-    fno=fno+1;
-    pause
-    end
+% % debug printing
+%     xx=1;
+%     if (xx == 0)
+%     fprintf('frame:%d, xideal:%d %d, xreal:%d %d, xadd:%d %d, yout:%d %d maxind: %d \n',...
+%         fno,nideal,nideal+nleng-1,indexl,nalpha+nleng-1+deltas,...
+%         nalpha-deltas+maxind-1,nalpha-deltas+maxind+nleng-2,nlin,nlin+nleng-1,maxind);
+%     fno=fno+1;
+%     pause
+%     end
         
 % update indices
         nideal=nalpha-deltas+maxind-1+nshift;
@@ -111,13 +111,13 @@ function [youts,youtn]=wsola_analysis(y,fs,alpha,nleng,nshift,wtype,deltamax,ipa
     youts=youtn*32700;
     
 % plot input and output
-    stitle=sprintf('fs:%d, alpha:%4.2f, nleng:%d, nshift:%d, deltamax:%d',...
-        fs,alpha,nleng,nshift,deltamax);
-    figure(2);
-    orient landscape;
-    subplot(211),plot(y,'r','LineWidth',2),...
-        xlabel('time in samples'),ylabel('amplitude'),axis tight;
-        title(stitle);
-    subplot(212),plot(youtn,'b','LineWidth',2),...
-        xlabel('time in samples'),ylabel('amplitude'),axis tight;
+%     stitle=sprintf('fs:%d, alpha:%4.2f, nleng:%d, nshift:%d, deltamax:%d',...
+%         fs,alpha,nleng,nshift,deltamax);
+%     figure(2);
+%     orient landscape;
+%     subplot(211),plot(y,'r','LineWidth',2),...
+%         xlabel('time in samples'),ylabel('amplitude'),axis tight;
+%         title(stitle);
+%     subplot(212),plot(youtn,'b','LineWidth',2),...
+%         xlabel('time in samples'),ylabel('amplitude'),axis tight;
 end
