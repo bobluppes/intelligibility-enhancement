@@ -23,7 +23,7 @@ function [xh SII_old SII_new] = sii_opt(x, n, fs)
 %   2013.
 %
 
-addpath('matlab_general');
+%addpath('matlab_general');
 
 x       = x(:);
 n       = n(:);

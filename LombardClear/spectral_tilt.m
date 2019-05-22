@@ -1,22 +1,54 @@
-function improved = spectral_tilt(improved, Fs)
+function [Pv_old, Pv_t, y] = spectral_tilt(x, fs)
+% Based on Jokinen et al.
 
-[f0, f1, f2, f3] = formants(improved, Fs, 900);
+% Parameters
+FrameRate = 10e-3;
 
-n = length(improved);
-t = linspace(0, (n/Fs), n);
-Omega = pi*[-1 : 2/n : 1-1/n];
-f = Omega*Fs/(2*pi);
+% Time decomposition
+Duration = length(x)/fs;
+Frames = floor(Duration / FrameRate) + 1;
+Samples = round(FrameRate * fs);
 
-Fc = 500;                                 % Desired Output Frequency   
-carrier = sin(2*pi*(Fc)*t);               % Generate Carrier 
-sm = transpose(f0) .* carrier;             % Modulate (Produces Upper & Lower Sidebands
-Fn = Fs/2;                                  % Design High-Pass Filter To Eliminate Lower Sideband
-Wp = Fc/Fn;
-Ws = Wp*0.8;
-[n,Wn] = buttord(Wp, Ws, 1, 10);
-[b,a] = butter(n,Wn,'high');
-[sos,g] = tf2sos(b,a);
-f0 = transpose(2*filtfilt(sos,g,sm));
+%frequency response of a filter with differencial equation  y[n]=x[n]-0.95*x[x-1]
+h=[1 -0.95]; 
 
-%Spectral tilting
-improved = f0 * 0.1 + f1 * 0.3 + f2 * 0.7 + f3 * 0.8;
+% Zero crossings function
+zci = @(v) find(v(:).*circshift(v(:), [-1 0]) <= 0);
+
+Pv_t = [];
+improved = [];
+for i = 1:Frames
+   % Take timeframes
+   start = (i-1)*Samples+1;
+   stop = i*Samples;
+   if stop > length(x)
+       stop = length(x);
+   end
+   x_t = x(start:stop); 
+   
+   % Probability of voicing
+   rms_t = rms(x_t);
+   zero_crossings = length(zci(x_t));
+   if zero_crossings == 0
+       zero_crossings = 1;
+   end
+   Pv_t(i) = rms_t / zero_crossings;
+   
+   % Pre-emphasis filter
+   y_t = filter(h,1,x_t);
+   improved = [improved; y_t];
+end
+
+% Normalize probability of voicing
+Pv_old = Pv_t;
+alpha = 1/max(Pv_t);
+Pv_t = Pv_t .* alpha;
+
+% Normalize power
+Po = sum(abs(x));
+Pi = sum(abs(improved));
+a = Po / Pi;
+improved = improved .* a;
+
+y = improved;
+
