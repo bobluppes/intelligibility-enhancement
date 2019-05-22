@@ -1,14 +1,33 @@
 %% process speech
 clear all
 
-[x fs]  	= audioread('SA1.wav');
+[x fs]  	= audioread('clean_speech.wav');
 x       	= x(:);
 y           = genSSN(x, -5); % add some speech-shaped noise
 n           = y-x;
 [xn si so]  = sii_opt(x, n, fs);
 
-%soundsc(x+n, fs);   % play before processing
-%soundsc(xn+n, fs);  % play after processing
+% Normalize
+% Normalize energy
+O = fftshift(fft(x));
+I = fftshift(fft(xn));
+Po = sum(abs(O));
+Pi = sum(abs(I));
+a = Po ./ Pi;
+xn = xn .* a;   
+
+soundsc(x, fs);
+pause;
+soundsc(x+n, fs);   % play before processing
+pause;
+soundsc(xn, fs);
+pause;
+soundsc(xn+n, fs);  % play after processing
+
+siib_old = SIIB_Gauss(x, x+n, fs)
+siib_new = SIIB_Gauss(xn, xn+n, fs)
+
+return; 
 
 disp([si so]); % SII before and after processing (last one should be higher)
 

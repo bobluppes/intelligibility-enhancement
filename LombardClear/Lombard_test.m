@@ -6,9 +6,16 @@ close all;
 [t, Fst] = audioread('Sounds/Train-noise.wav');
 Fn = Fs/2;
 n = length(x);
-noise = t(1:n,1);
+t = resample(t, Fs, Fst);
+t = t(:,1);
+m = length(t);
+noise = [t; zeros((n-m), 1)];
 
-y = spectral_tilt(x, Fs, 1);
+
+[Pv_old, Pv_t, y] = spectral_tilt(x, Fs);
+
+% figure;
+% plot(Pv_t);
 
 X = fftshift(fft(x));
 Y = fftshift(fft(y));
@@ -19,7 +26,11 @@ f = Omega*Fs/(2*pi);
 figure;
 subplot(2,1,1);
 plot(f, abs(X));
+title('Original');
+
 subplot(2,1,2);
 plot(f, abs(Y));
+title('Decreased spectral tilt');
 
+soundsc(y+noise*0.6, Fs);
 
