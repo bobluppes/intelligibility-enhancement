@@ -1,7 +1,7 @@
-function improved = extend_vowels(original, Fs, extension, sampleInt, thres, steps)
+function improved = extend_vowels(original, Fs, extension)
 % extension is 1/alpha 
 improved = [];
-alpha = 0.8;
+alpha = 1/extension;
 nleng = round(5*Fs/1000); %samples
 nshift = round(1.25*Fs/1000); %samples
 wtype = 1; % Hamming

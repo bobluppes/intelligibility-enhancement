@@ -1,17 +1,12 @@
-function improved = Lombard(original, Fs, snr, timeInt)
+function improved = Lombard(original, Fs, snr, extension, tilt)
 % parameters (dependend on SNR??)
-extension = 3;
-tilt = 0;
 
 % Calculate variables
-n = length(original);
-sampleInt = timeInt * Fs;
-steps = round(n/sampleInt);
+
 
 %extend vowels and spectral tilt
-thres = (0.1 * max(original)) * sampleInt;
-improved = extend_vowels(original, Fs, extension, sampleInt, thres, steps);
-improved = spectral_tilt(improved, -0.6);
+improved = extend_vowels(original, Fs, extension);
+improved = spectral_tilt(improved, tilt);
 
 % Fourier Transform of original and improved signals
 O = fft(original);

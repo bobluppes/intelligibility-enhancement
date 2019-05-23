@@ -1,5 +1,5 @@
 function [youts,youtn]=wsola_analysis(y,fs,alpha,nleng,nshift,wtype,deltamax,ipause);
-
+%%%https://nl.mathworks.com/matlabcentral/fileexchange/45451-waveform-similarity-and-overlap-add-wsola-for-speech-and-audio?focused=3876481&tab=function
 % wsola analysis of speech file
 %
 % Inputs:
