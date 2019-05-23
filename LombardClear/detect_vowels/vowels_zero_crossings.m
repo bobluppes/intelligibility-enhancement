@@ -12,7 +12,7 @@ function [p] = vowels_zero_crossings (X, f_s)
                 vtf(j) = vtf(j) + 1;
             end
         end
-        r = rms(frame(:,j))
+        r = rms(frame(:,j));
         p(j) = r/vtf(j)*1000;
     end
 end

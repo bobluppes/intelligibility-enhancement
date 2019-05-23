@@ -1,5 +1,7 @@
 function y = compress(x, t)
-
+% x: audiosignal
+% t: threshold in dB
+% Compressor
 dRC = compressor('AttackTime',0,'ReleaseTime',0);
 dRC.Threshold = t;
 
