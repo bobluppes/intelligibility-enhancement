@@ -37,7 +37,7 @@ function [youts,youtn]=wsola_analysis(y,fs,alpha,nleng,nshift,wtype,deltamax,ipa
     nalpha=1;
     nlin=1;
     nsamp=length(y);
-    yout=zeros(floor(nsamp/alpha+nleng+0.5),1);
+    yout=zeros(ceil(nsamp/alpha+nleng+0.5),1);
     yout(1:nleng)=y(1:nleng).*win(1:nleng);
     fno=2; % frame number
     
@@ -87,6 +87,8 @@ function [youts,youtn]=wsola_analysis(y,fs,alpha,nleng,nshift,wtype,deltamax,ipa
         
 % overlap add the best match
         xadd=y(nalpha-deltas+maxind-1:nalpha-deltas+maxind+nleng-2).*win(1:nleng);
+        %len = min(nlin+nleng-1,length(yout))-nlin;
+        %yout(nlin:min(nlin+nleng-1,length(yout)))=yout(nlin:min(nlin+nleng-1,length(yout)))+xadd(1:len+1);
         yout(nlin:nlin+nleng-1)=yout(nlin:nlin+nleng-1)+xadd;
         
 % % debug printing

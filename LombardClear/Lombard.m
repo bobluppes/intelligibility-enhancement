@@ -1,4 +1,4 @@
-function improved = Lombard(original, Fs, snr, extension, tilt)
+function improved = Lombard(original, Fs, snr, extension, tilt, comp)
 % original: audiosignal
 % Fs: sample rate
 % snr: signal-to-noise ratio in dB
@@ -21,7 +21,7 @@ a = Po*length(I) / (Pi*length(O));
 improved = improved .* a;
 
 % Dynamic range compression
-improved = compress(improved, -100);
+improved = compress(improved, -comp);
 
 
 
