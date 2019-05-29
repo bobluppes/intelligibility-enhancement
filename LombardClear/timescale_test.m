@@ -6,6 +6,6 @@ close all;
 o = 0.5;
 w = hann(500);
 
-y = OLA(x, o, w, 0.8);
+y = OLA(x, 0.5, w, 1.2);
 
 soundsc(y, fs);

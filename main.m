@@ -36,6 +36,8 @@ return;
 %     siib_lombard(i) = SIIB_Gauss(Il, Il+noise_lombard, Fs);
 % end
 
+Il = Lombard(original, Fs, 0, 0.5, 0);
+
 comp = linspace(0, 100, 20);
 
 mod = [];
