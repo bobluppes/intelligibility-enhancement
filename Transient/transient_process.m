@@ -2,8 +2,10 @@ function trans = transient_process (x, fs, bw)
 % Make the input signal x more intelligible by increasing the power in the
 % transient parts in frequency domain.
 
+bPlot = true;
+
 % Parameters
-timeInt = 0.1;              % 100ms
+timeInt = 0.5;              % 100ms
 %bw = 700;                   % Bandwidth of formant bandpass filters
 %amplification = 12.5;        % The amplification of the transient part
                             % This should be calculated from snr
@@ -103,10 +105,35 @@ for i = 1:steps
     center3 = f(round((d(index) + d(index+1))/2));
     
     t = x_t;
-    q1 = bandpass(x_t, [max((center1 - (bw/2)), 50) min((center1 + (bw/2)), 3980)], fs);
-    q2 = bandpass(x_t, [max((center2 - (bw/2)), 50) min((center2 + (bw/2)), 3980)], fs);
-    q3 = bandpass(x_t, [max((center3 - (bw/2)), 50) min((center3 + (bw/2)), 3980)], fs);
+    start1 = max((center1 - (bw/2)), 50);
+    stop1 = max(min((center1 + (bw/2)), 3980),100);
+    start2 = max((center2 - (bw/2)), stop1);
+    stop2 = max(min((center2 + (bw/2)), 3980),stop1+20);
+    start3 = max((center3 - (bw/2)), stop2);
+    stop3 = max(min((center3 + (bw/2)), 3999),stop2 + 20);
+    q1 = bandpass(x_t, [start1 stop1], fs);
+    q2 = bandpass(x_t, [start2 stop2], fs);
+    q3 = bandpass(x_t, [start3 stop3], fs);
     t = t - q1 - q2 - q3;
+    
+    % Plot to validate
+    if (bPlot == true)
+        figure;
+        plot(f, abs(X_t));
+        xlim([0 4000]);
+        hold on;
+        line([start1 stop1], [-0.5 -0.5], 'Color', 'red');
+        line([start2 stop2], [-0.4 -0.4], 'Color', 'green');
+        line([start3 stop3], [-0.5 -0.5], 'Color', 'cyan');
+        
+        yl = ylim;
+        line([center1 center1], [yl(1)-0.2 yl(2)], 'Color', 'red', 'LineStyle', '--');
+        line([center2 center2], [yl(1)-0.2 yl(2)], 'Color', 'green', 'LineStyle', '--');
+        line([center3 center3], [yl(1)-0.2 yl(2)], 'Color', 'cyan', 'LineStyle', '--');
+    
+        pause;
+        close all;
+    end
     
     % Append transient part to trans signal
     trans = [trans; t];

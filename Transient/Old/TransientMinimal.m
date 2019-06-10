@@ -4,16 +4,17 @@ clear all;
 close all;
 
 % Load audio signal
-[original,Fs] = audioread('Sounds/maleVoice.wav');
-[train, Fst] = audioread('Sounds/Train-noise.wav');
+[original,Fs] = audioread('ButcherBlock.wav');
+%[train, Fst] = audioread('Sounds/Train-noise.wav');
+train = 0.05*randn(length(original), 1);
 Fn = Fs/2;
 n = length(original);
 
-train = resample(train, Fs, Fst);
-train = train(:,1);
-m = length(train);
-train = [train; zeros((n-m), 1)];
-train = train .* 0.5;
+% train = resample(train, Fs, Fst);
+% train = train(:,1);
+% m = length(train);
+% train = [train; zeros((n-m), 1)];
+% train = train .* 0.5;
 
 O = fft(original);
 O = fftshift(O);
@@ -95,4 +96,4 @@ ylabel('Amplitude');
 improved = improved + train;
 original = original + train;
 
-sound(original, Fs);
+audiowrite('transient_example.wav', improved-train, Fs);

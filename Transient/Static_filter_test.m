@@ -3,34 +3,30 @@ close all
 
 % Load audio signal
 [x,fs] = audioread('maleVoice.wav');
-[train, fst] = audioread('Sounds/Train-noise.wav');
-% initialize noise
-train = resample(train, fs, fst);
-train = train(:,1);
-train = [train; train];
-noise = train(1:length(x));
-
-% Transient algorithm
-y_transient = Transient(x, fs);
-
-% Compute static filter
-H = Transient_static(y_transient, x);
-h = ifft(ifftshift(H));
-
-y = filter(h, 1, x);
-
-siib_old = SIIB_Gauss(x, x+noise, fs);
-siib_new = SIIB_Gauss(y, y+noise, fs);
-siib_tran = SIIB_Gauss(y_transient, y_transient+noise, fs);
-
-Y = fftshift(fft(y));
-n = length(Y);
+n = length(x);
 Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*fs/(2*pi);
+noise = 0.01*randn(n, 1);
+
+trans = transient_process(x, fs, 900);
+
+X = fftshift(fft(x));
+T = fftshift(fft(trans));
+
 figure;
-plot(f, abs(Y));
+plot(f, abs(X));
+hold on;
+plot(f, abs(T));
 
-y = lowpass(y, 3600, fs);
-siib_lowpassed = SIIB_Gauss(y, y+noise, fs);
+amp = linspace(0, 20, 40);
+siib = [];
+for i = 1:length(amp)
+    enhanced = transient_amplify(x, trans, amp(i));
+    siib(i) = SIIB_Gauss(enhanced, enhanced+noise, fs); 
+end
 
-soundsc(y+noise, fs);
+figure;
+plot(amp, siib);
+
+clicks = bandpass(trans, [3930 3980], fs);
+soundsc(clicks, fs);
