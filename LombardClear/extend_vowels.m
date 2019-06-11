@@ -36,7 +36,7 @@ while i <= length(vowels)-1
         %longer_vowel = wsola_analysis(section,Fs,alpha,nleng,nshift,wtype,deltamax,ipause);
         longer_vowel = OLA(section, 0.5, hann(100), extension);
         L = fftshift(fft(longer_vowel));
-        longer_vowel = longer_vowel*sum(abs(S))/sum(abs(L));
+        %longer_vowel = longer_vowel*sum(abs(S))/sum(abs(L));
         improved = [improved; longer_vowel];
     % append if consonant
     else
