@@ -8,7 +8,7 @@ Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*fs/(2*pi);
 noise = 0.01*randn(n, 1);
 
-trans = transient_process(x, fs, 900);
+trans = transient_process(x, fs, 400);
 
 X = fftshift(fft(x));
 T = fftshift(fft(trans));
@@ -17,6 +17,13 @@ figure;
 plot(f, abs(X));
 hold on;
 plot(f, abs(T));
+
+return;
+
+figure;
+plot(x);
+hold on;
+plot(trans*0.0001);
 
 amp = linspace(0, 20, 40);
 siib = [];
