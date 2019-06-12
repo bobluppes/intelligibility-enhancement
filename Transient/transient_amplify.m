@@ -6,7 +6,7 @@ improved = original + trans;
 % Normalize energy
 O = fftshift(fft(original));
 I = fftshift(fft(improved));
-Po = sum(abs(O));
-Pi = sum(abs(I));
+Po = sum(original.^2);
+Pi = sum(improved.^2);
 a = Po ./ Pi;
 AudioOut = improved .* a;

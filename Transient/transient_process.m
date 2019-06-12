@@ -2,7 +2,7 @@ function trans = transient_process (x, fs, bw)
 % Make the input signal x more intelligible by increasing the power in the
 % transient parts in frequency domain.
 
-bPlot = true;
+bPlot = false;
 
 % Parameters
 timeInt = 0.5;              % 100ms
@@ -110,17 +110,27 @@ for i = 1:steps
     start2 = max((center2 - (bw/2)), stop1+5);
     stop2 = max(min((center2 + (bw/2)), 3980),stop1+20);
     start3 = max((center3 - (bw/2)), stop2+5);
-    stop3 = max(min((center3 + (bw/2)), 3999),stop2 + 20);
+    stop3 = max(min((center3 + (bw/2)), 4000),stop2 + 20);
     q1 = bandpass(x_t, [start1 stop1], fs);
     q2 = bandpass(x_t, [start2 stop2], fs);
-    q3 = bandpass(x_t, [start3 stop3], fs);
+    
+    % Use highpass if f3 is close to Fn
+    if (stop3 >= 3965)
+        q3 = highpass(x_t, start3, fs);
+    else
+        q3 = bandpass(x_t, [start3 stop3], fs);
+    end
+    
+%     t1 = t - q1;
+%     t2 = t1 - q2;
+%     t3 = t2 - q3;
     t = t - q1 - q2 - q3;
     
     % Plot to validate
     if (bPlot == true)
         figure('units','normalized','outerposition',[0 0 1 1]);
         
-        subplot(2,1,1);
+        subplot(5,1,1);
         plot(f, abs(X_t));
         xlim([0 4000]);
         hold on;
@@ -135,15 +145,33 @@ for i = 1:steps
         xlabel('Frequency [Hz]');
         ylabel('Amplitude');
         
-        subplot(2,1,2);
+        subplot(5,1,2);
         plot(t);
-        title('Estimated Transient Component');
+        title('x_t');
+        xlabel('Sample [n]');
+        ylabel('Amplitude');
+        
+        subplot(5,1,3);
+        plot(t1);
+        title('x_t - q1');
+        xlabel('Sample [n]');
+        ylabel('Amplitude');
+        
+        subplot(5,1,4);
+        plot(t2);
+        title('x_t - q1 - q2');
+        xlabel('Sample [n]');
+        ylabel('Amplitude');
+        
+        subplot(5,1,5);
+        plot(t3);
+        title('x_t - q1 - q2 - q3');
         xlabel('Sample [n]');
         ylabel('Amplitude');
         
         soundsc(x_t, fs);
         pause;
-        soundsc(t, fs);
+        soundsc(t3, fs);
     
         pause;
         close all;
