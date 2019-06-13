@@ -13,7 +13,7 @@ if ((a_v * b_v) >= 0)
 end
 
 % Tolerance in bits
-e = 5;
+e = 0.5;
 
 i = 0;
 while(1)

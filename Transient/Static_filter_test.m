@@ -6,17 +6,16 @@ close all
 n = length(x);
 Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*fs/(2*pi);
-randnoise = randn(n, 1);
+randnoise = 0.02*randn(n, 1);
 
 trans = transient_process(x, fs, 505);
-TFenhanced = transient_amplify(x, trans, 8);
 
-h = Transient_static(TFenhanced, x);
-enhanced = highpass(conv(x,h), 100, fs);
+amp = linspace(0, 20, 40);
+siib = [];
+for i = 1:length(amp)
+    enhanced = transient_amplify(x, trans, amp(i));
+    siib(i) = SIIB_Gauss(enhanced, enhanced+randnoise, fs);
+end
 
 figure;
-plot(abs(fftshift(fft(enhanced))));
-figure;
-plot(abs(fftshift(fft(TFenhanced))));
-
-soundsc(enhanced, fs);
+plot(amp, siib);

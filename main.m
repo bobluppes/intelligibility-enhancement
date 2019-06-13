@@ -2,9 +2,20 @@ clear all;
 close all
 
 % Load audio signal
-[x,fs] = audioread('maleVoice.wav');
-noise = 0.02*randn(length(x), 1);
+[x,fs] = audioread('iua.wav');
+noise = 0.08*randn(length(x), 1);
 n = length(x);
+x = x(:,1);
+x = spectral_tilt(x, 0.9);
+
+stft(x,fs,'Window',kaiser(80,5),'OverlapLength',79,'FFTLength',80);
+ylim([0 4]);
+xlabel('Time [s]');
+ylabel('Frequency [Hz]');
+title('');
+
+
+return;
 
 g = SIIB_Gain(x, noise, fs, 120);
 

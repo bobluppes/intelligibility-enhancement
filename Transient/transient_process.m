@@ -5,7 +5,7 @@ function trans = transient_process (x, fs, bw)
 bPlot = false;
 
 % Parameters
-timeInt = 0.5;              % 100ms
+timeInt = 0.1;              % 100ms
 %bw = 700;                   % Bandwidth of formant bandpass filters
 %amplification = 12.5;        % The amplification of the transient part
                             % This should be calculated from snr
@@ -130,8 +130,8 @@ for i = 1:steps
     if (bPlot == true)
         figure('units','normalized','outerposition',[0 0 1 1]);
         
-        subplot(5,1,1);
-        plot(f, abs(X_t));
+        subplot(2,1,1);
+        plot(f, 10*log10(abs(X_t)));
         xlim([0 4000]);
         hold on;
         line([start1 stop1], [-0.5 -0.5], 'Color', 'red');
@@ -143,35 +143,17 @@ for i = 1:steps
         line([center3 center3], [yl(1)-0.2 yl(2)], 'Color', 'cyan', 'LineStyle', '--');
         title('Formant Estimation Speech');
         xlabel('Frequency [Hz]');
-        ylabel('Amplitude');
+        ylabel('Magnitude [dB]');
         
-        subplot(5,1,2);
+        subplot(2,1,2);
         plot(t);
         title('x_t');
         xlabel('Sample [n]');
-        ylabel('Amplitude');
-        
-        subplot(5,1,3);
-        plot(t1);
-        title('x_t - q1');
-        xlabel('Sample [n]');
-        ylabel('Amplitude');
-        
-        subplot(5,1,4);
-        plot(t2);
-        title('x_t - q1 - q2');
-        xlabel('Sample [n]');
-        ylabel('Amplitude');
-        
-        subplot(5,1,5);
-        plot(t3);
-        title('x_t - q1 - q2 - q3');
-        xlabel('Sample [n]');
-        ylabel('Amplitude');
+        ylabel('Magnitude');
         
         soundsc(x_t, fs);
         pause;
-        soundsc(t3, fs);
+        soundsc(t, fs);
     
         pause;
         close all;
