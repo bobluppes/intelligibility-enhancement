@@ -3,11 +3,10 @@ close all
 
 % Load audio signal
 [x,fs] = audioread('maleVoice.wav');
-noise = randn(length(x), 1);
+noise = 0.04*randn(length(x), 1);
 n = length(x);
-x = x(10000:round(n/3));
 
-pspectrum(x, fs, 'spectrogram', 'FrequencyLimits', [0 4000], 'FrequencyResolution', 20);
+g = SIIB_Gain(x, x+noise, fs, 120);
 
 return;
 
