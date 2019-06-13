@@ -1,19 +1,34 @@
 function g = SIIB_Gain(x, n, fs_signal, bits)
+% Find the necessary gain to achieve a SIIB_Gauss of bits
+% 1 <= G <= 100
 
-a = 0.001;
+a = 1;
 b = 100;
+
+% Check if necessary gain is contained in the interval
+a_v = difference(a, x, n, fs_signal, bits);
+b_v = difference(b, x, n, fs_signal, bits);
+if ((a_v * b_v) >= 0)
+    error('optimal gain not contained in interval');
+end
+
+% Tolerance in bits
 e = 5;
 
+i = 0;
 while(1)
+    % Calculate midpoint
     c = (a + b) / 2;
-    c_v = difference(c, x, n, fs_signal, bits);
+    c_v = difference(c, x, n, fs_signal, bits)
     
-    if (c <= e)
+    if (abs(c_v) <= e)
         break
     end
     
-    a_v = difference(a, x, n, fs_signal, bits);
-    b_v = difference(b, x, n, fs_signal, bits);
+    if (1 ~= 0)
+        a_v = difference(a, x, n, fs_signal, bits);
+        b_v = difference(b, x, n, fs_signal, bits);
+    end
     
     if ((a_v * c_v) < 0)
         b = c;
@@ -22,8 +37,11 @@ while(1)
     else
         error('gain not in interval');
     end
+    
+    i = i + 1;
 end
 
+fprintf('Gain computed in %d iterations', i);
 g = c;
 
 function d = difference(f, x, n, fs_signal, bits)

@@ -3,10 +3,12 @@ close all
 
 % Load audio signal
 [x,fs] = audioread('maleVoice.wav');
-noise = 0.04*randn(length(x), 1);
+noise = 0.02*randn(length(x), 1);
 n = length(x);
 
-g = SIIB_Gain(x, x+noise, fs, 120);
+g = SIIB_Gain(x, noise, fs, 120);
+
+SIIB_Gauss(g*x, g*x+noise, fs)
 
 return;
 
