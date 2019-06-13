@@ -34,7 +34,7 @@ while i <= length(vowels)-1
     if is_vowel == 1
         S = fftshift(fft(section));
         %longer_vowel = wsola_analysis(section,Fs,alpha,nleng,nshift,wtype,deltamax,ipause);
-        longer_vowel = OLA(section, 0.5, hann(100), extension);
+        longer_vowel = WSOLAEllen(section, 0.5, hann(200), extension, 50);
         L = fftshift(fft(longer_vowel));
         %longer_vowel = longer_vowel*sum(abs(S))/sum(abs(L));
         improved = [improved; longer_vowel];

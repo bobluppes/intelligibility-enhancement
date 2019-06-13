@@ -23,7 +23,7 @@ sigma = [];
 for i = 1:length(gamma)
     sigma(i) = round((1/tau)*gamma(i));
 end
-length(w)/2
+length(w)/2;
 % Zero padd input and output signal
 x = [zeros(length(w)/2, 1); x; zeros(length(w)/2, 1)];
 y = [zeros(length(w)/2, 1); y; zeros(length(w)/2, 1)];
