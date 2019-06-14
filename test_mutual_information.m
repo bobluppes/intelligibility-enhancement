@@ -3,15 +3,15 @@ clear all
 
 [x,fs] = audioread('clean_speech.wav');
 
-stretch = linspace(1.05,1.45,8);
-stretched = [];
+amplification = linspace(0,20,20);
+amplified = [];
 siib = [];
-for i = 1:length(stretch)
-    stretched = Lombard(x, fs,0, stretch(i),0,0);   
-    n = length(stretched)-length(x);
-    siib(i) = SIIB_Gauss([x;zeros(n,1)], stretched, fs);
+y = transient_process (x, fs, 505);
+for i = 1:length(amplification)
+    amplified = transient_amplify(x, y, amplification(i)); 
+    siib(i) = SIIB_Gauss(x, amplified, fs);
 end
 figure
-plot(stretch, siib)
-xlabel('Vowel stretch factor');ylabel('SIIB [bits/s]');
+plot(amplification, siib)
+xlabel('Transient amplification');ylabel('SIIB [bits/s]');
 
