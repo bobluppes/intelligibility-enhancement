@@ -3,7 +3,7 @@ function y = compress(x, t)
 % t: threshold in dB
 % Compressor
 dRC = compressor('AttackTime',0,'ReleaseTime',0);
-dRC.Threshold = -t;
+dRC.Threshold = t;
 
 improved = dRC(x);
 

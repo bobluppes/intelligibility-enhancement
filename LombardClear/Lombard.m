@@ -7,21 +7,16 @@ function improved = Lombard(original, Fs, snr, extension, tilt, comp)
 improved = original;
 %extend vowels and spectral tilt
 improved = extend_vowels(original, Fs, extension);
-%improved = spectral_tilt(improved, tilt);
-
-% Fourier Transform of original and improved signals
-O = fft(original);
-O = fftshift(O);
-I = fftshift(fft(improved));
+improved = spectral_tilt(improved, tilt);
 
 % Normalize the improved signal power
-Po = sum(abs(O));
-Pi = sum(abs(I));
-a = Po*length(I) / (Pi*length(O));
+Po = sqrt(sum(original.^2));
+Pi = sqrt(sum(improved.^2));
+a = Po*length(improved) / (Pi*length(original));
 improved = improved .* a;
 
 % Dynamic range compression
-%improved = compress(improved, -comp);
+improved = compress(improved, -comp);
 
 
 
