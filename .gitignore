@@ -1,3 +1,4 @@
 *.asv
 
 *.mat
+!Listening_Test/*.mat
