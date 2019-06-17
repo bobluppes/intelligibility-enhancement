@@ -11,16 +11,16 @@ alphabet = ['A' 'B' 'C' 'D' 'E' 'F' 'G' 'H' 'I' 'J' 'K' 'L' 'M' 'N' 'O' 'P' 'Q' 
 % INPUT
 % for i = 1:20
 %     prompt = alphabet(i);
-%     LI(i) = LI(i) + input(prompt);
+%     LL(i) = LL(i) + input(prompt);
 % end
 
 % NORMALIZE
-Lombard_NF = (LA + LG) .* (1/10);
-Tilt_NF = (LB + LH) .* (1/11);
-Compress_NF = (LC + LI) .* (1/11);
-Lombard_F = (LD + LJ) .* (1/9);
-Tilt_F = (LE + LK) .* (1/9);
-Compress_F = (LF + LL) .* (1/9);
+Lombard_NF = (LA + LG) .* (1/14);
+Tilt_NF = (LB + LH) .* (1/15);
+Compress_NF = (LC + LI) .* (1/15);
+Lombard_F = (LD + LJ) .* (1/13);
+Tilt_F = (LE + LK) .* (1/13);
+Compress_F = (LF + LL) .* (1/13);
 
 %PLOT
 figure;

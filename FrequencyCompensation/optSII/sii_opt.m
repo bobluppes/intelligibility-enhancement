@@ -41,10 +41,16 @@ w       = max(w, 0);
 X    	= gt_analysis(x, H, N);
 E       = gt_analysis(n, H, N);
 
+size(X)
+size(E)
+
 VAD     = 10*log10(mean(X.^2))>(max(10*log10(mean(X.^2)))-60);
 
 sig_x   = sqrt(mean(X(:, VAD).^2, 2));
 sig_e   = sqrt(mean(E(:, VAD).^2, 2));
+
+size(sig_x)
+size(sig_e)
 
 alpha   = repmat(getOptimalGain(sig_x, sig_e, w), [1 size(X, 2)]);
 

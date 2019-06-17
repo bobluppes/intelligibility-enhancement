@@ -3,7 +3,7 @@ close all
 
 % Parameters
 noisepower = 0.06;
-stretch = linspace(1, 3, 20);
+stretch = linspace(1, 3, 20); 
 tilt = linspace(0, 1, 20);
 compression = linspace(0, 30, 20);   
 
