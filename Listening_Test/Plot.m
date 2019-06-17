@@ -11,13 +11,13 @@ alphabet = ['A' 'B' 'C' 'D' 'E' 'F' 'G' 'H' 'I' 'J' 'K' 'L' 'M' 'N' 'O' 'P' 'Q' 
 % INPUT
 % for i = 1:20
 %     prompt = alphabet(i);
-%     LL(i) = LL(i) + input(prompt);
+%     LI(i) = LI(i) + input(prompt);
 % end
 
 % NORMALIZE
-Lombard_NF = (LA + LG) .* (1/8);
-Tilt_NF = (LB + LH) .* (1/9);
-Compress_NF = (LC + LI) .* (1/9);
+Lombard_NF = (LA + LG) .* (1/10);
+Tilt_NF = (LB + LH) .* (1/11);
+Compress_NF = (LC + LI) .* (1/11);
 Lombard_F = (LD + LJ) .* (1/9);
 Tilt_F = (LE + LK) .* (1/9);
 Compress_F = (LF + LL) .* (1/9);

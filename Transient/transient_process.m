@@ -3,6 +3,7 @@ function trans = transient_process (x, fs, bw)
 % transient parts in frequency domain.
 
 bPlot = false;
+bDB = false;
 
 % Parameters
 timeInt = 0.1;              % 100ms
@@ -131,7 +132,11 @@ for i = 1:steps
         figure('units','normalized','outerposition',[0 0 1 1]);
         
         subplot(2,1,1);
-        plot(f, 10*log10(abs(X_t)));
+        if (bDB == true)
+            plot(f, 10*log10(abs(X_t)));
+        else
+            plot(f, abs(X_t));
+        end
         xlim([0 4000]);
         hold on;
         line([start1 stop1], [-0.5 -0.5], 'Color', 'red');
