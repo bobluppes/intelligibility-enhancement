@@ -10,12 +10,13 @@ randnoise = 0.02*randn(n, 1);
 
 trans = transient_process(x, fs, 505);
 
-amp = linspace(0, 20, 40);
-siib = [];
-for i = 1:length(amp)
-    enhanced = transient_amplify(x, trans, amp(i));
-    siib(i) = SIIB_Gauss(enhanced, enhanced+randnoise, fs);
-end
+
+enhanced = transient_amplify(x, trans, 9);
+siib = SIIB_Gauss(enhanced, enhanced+randnoise, fs);
+filter = Transient_static(enhanced, x);
+
+E = ifft(fft(x).*filter);
 
 figure;
-plot(amp, siib);
+plot(E);
+soundsc(E, fs)
