@@ -6,7 +6,20 @@ close all
 noise = 0.06*randn(length(x), 1);
 n = length(x);
 
-alphas = SIIB_Opt_Gain(x, noise, fs);
+X = fftshift(fft(x));
+
+
+[g converge error] = SIIB_Gain(x, noise, fs, 120);
+
+figure;
+plot(converge, 'o');
+xlabel('Iteration Step');
+ylabel('Determined Gain');
+
+figure;
+plot(error, 'o');
+xlabel('Iteration Step');
+ylabel('Absolute Error');
 
 return;
 

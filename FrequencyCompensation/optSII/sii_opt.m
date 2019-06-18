@@ -28,9 +28,15 @@ function [xh SII_old SII_new] = sii_opt(x, n, fs)
 x       = x(:);
 n       = n(:);
 
-sii_bl  = [100 200 300 400 510 630 770 920 1080 1270 1480 1720 2000 2320 2700 3150 3700 4400 5300 6400 7700; 200 300 400 510 630 770 920 1080 1270 1480 1720 2000 2320 2700 3150 3700 4400 5300 6400 7700 9500];
+% ERB gammatone filterbank
+mn = 100;   % minimum center frequency
+mx = 6500;  % maximum center frequency
+J = round(21.4*log10(1+0.00437*mx)-21.4*log10(1+0.00437*mn)); % number of filters
+[G, sii_bl] = gammatone(fs, 400, J, mn, mx);
+%sii_bl  = [100 200 300 400 510 630 770 920 1080 1270 1480 1720 2000 2320 2700 3150 3700 4400 5300 6400 7700; 200 300 400 510 630 770 920 1080 1270 1480 1720 2000 2320 2700 3150 3700 4400 5300 6400 7700 9500];
 sii_cf  = exp(mean(log(sii_bl)));
 sii_bi  = [0.0103 0.0261 0.0419 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0460 0.0343 0.0226 0.0110].';
+sii_bi = 0.75 * ones(length(sii_bi), 1);
 
 N       = round(fs*32/1000);
 [H cf]  = gt_getfb(150, min(fs/2, 8500), fs, N*2, 64);
@@ -61,6 +67,32 @@ xh      = norm(x).*xh./norm(xh);
 
 SII_old	= w*(max(min(20*log10(sig_x./sig_e), 15), -15)./30+.5);
 SII_new	= w*(max(min(20*log10(alpha(:, 1).*sig_x./sig_e), 15), -15)./30+.5);
+
+
+
+function  [A, cf] = gammatone(fs, N_fft, numBands, cf_min, cf_max)
+% gammatone filterbank
+erbminmax 	= 21.4*log10(4.37*([cf_min cf_max]./1000) + 1);        % convert to erbs
+cf_erb      = linspace(erbminmax(1), erbminmax(2), numBands);      % linspace M filters on ERB-scale
+cf          = (10.^(cf_erb./21.4)-1)./4.37*1000;                   % obtain center frequency in Hz
+cf=cf(:);
+
+order = 4;
+a = factorial(order-1)^2/(pi*factorial(2*order-2)*2^-(2*order-2)); % Normalisation factor that ensures the gammatone filter has the correct ERB [Holdsworth & Patterson 1988].
+b = a * 24.7.*(4.37.*cf./1000+1); % bandwidth
+
+% frequency vector (Hz)
+f = linspace(0, fs, N_fft+1);
+f = f(1:(N_fft/2+1));
+
+% filter bank
+A = zeros(numBands, length(f));
+for i=1:numBands
+    temp = 1./(b(i)^2+(f-cf(i)).^2).^(order/2);    % gammatone magnitude response
+    A(i,:) = temp/max(temp);                       % normalise the maximum value    
+end
+cf=cf(:);
+A(A<0.001) = 0;
 
 
 
