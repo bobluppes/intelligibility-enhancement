@@ -15,36 +15,44 @@ alphabet = ['A' 'B' 'C' 'D' 'E' 'F' 'G' 'H' 'I' 'J' 'K' 'L' 'M' 'N' 'O' 'P' 'Q' 
 % end
 
 % NORMALIZE
-Lombard_NF = (LA + LG) .* (1/14);
-Tilt_NF = (LB + LH) .* (1/15);
-Compress_NF = (LC + LI) .* (1/15);
-Lombard_F = (LD + LJ) .* (1/13);
-Tilt_F = (LE + LK) .* (1/13);
-Compress_F = (LF + LL) .* (1/13);
+Lombard_NF = (LA + LG) .* (1/14)*100;
+Tilt_NF = (LB + LH) .* (1/15)*100;
+Compress_NF = (LC + LI) .* (1/15)*100;
+Lombard_F = (LD + LJ) .* (1/13)*100;
+Tilt_F = (LE + LK) .* (1/13)*100;
+Compress_F = (LF + LL) .* (1/13)*100;
 
 %PLOT
 figure;
 
-subplot(3,2,1);
+subplot(2,1,1);
 plot(stretch, Lombard_NF);
-title('Lombard NF');
+title('Non-fluctuating noise');
+xlabel('Vowel stretch factor'); ylabel('Words recognized [%]')
 
-subplot(3,2,2);
-plot(tilt, Tilt_NF);
-title('Tilt NF');
-
-subplot(3,2,3);
-plot(compression, Compress_NF);
-title('Compression NF');
-
-subplot(3,2,4);
+subplot(2,1,2);
 plot(stretch, Lombard_F);
-title('Lombard F');
+title('Fluctuating noise');
+xlabel('Vowel stretch factor'); ylabel('Words recognized [%]')
 
-subplot(3,2,5);
+figure
+subplot(2,1,1);
+plot(tilt, Tilt_NF);
+title('Non-fluctuating noise');
+xlabel('Tilt factor'); ylabel('Words recognized [%]')
+
+subplot(2,1,2);
 plot(tilt, Tilt_F);
-title('Tilt F');
+title('Fluctuating noise');
+xlabel('Tilt factor'); ylabel('Words recognized [%]')
 
-subplot(3,2,6);
+figure
+subplot(2,1,1);
+plot(compression, Compress_NF);
+title('Non-fluctuating noise');
+xlabel('Threshold [dB]'); ylabel('Words recognized [%]')
+
+subplot(2,1,2);
 plot(compression, Compress_F);
-title('Compression F');
+title('Fluctuating noise');
+xlabel('Threshold [dB]'); ylabel('Words recognized [%]')
