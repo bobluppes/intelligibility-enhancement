@@ -53,3 +53,4 @@ ylim([0 230]);
 xlabel('Amplification factor');
 ylabel('SIIB^{Gauss} [bits/s]');
 legend('SNR 6 dB', 'SNR 5.5 dB', 'SNR 5 dB', 'SNR 4.5 dB', 'SNR 4 dB', 'SNR 3.5 dB', 'SNR 3 dB', 'SNR 2.5 dB', 'SNR 2 dB', 'SNR 1.5 dB', 'SNR 1 dB', 'SNR 0.5 dB', 'SNR 0 dB', 'SNR -0.5 dB', 'SNR -1 dB', 'SNR -1.5 dB', 'SNR -2 dB', 'SNR -2.5 dB', 'SNR -3 dB', 'Maxima');
+
