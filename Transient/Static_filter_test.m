@@ -8,6 +8,12 @@ Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*fs/(2*pi);
 randnoise = randn(n, 1);
 
+snr_need = 3;
+px = sqrt(sum(x.^2));
+pn = px/10^(snr_need/10);
+randnoise = pn/sqrt(sum(randnoise.^2))*randnoise;
+snr = 10*log10(px/ pn);
+
 trans = transient_process(x, fs, 505);
 enhanced = transient_amplify(x, trans, 10);
 
@@ -16,25 +22,39 @@ filter = Transient_static(enhanced, x);
 X = fft(x);
 
 static_enhanced = ifft(X.*filter);
-
+siib_o = SIIB_Gauss(x, x+randnoise, fs);
+siib_trans = SIIB_Gauss(enhanced, enhanced+randnoise, fs);
+siib_static = SIIB_Gauss(static_enhanced, static_enhanced+randnoise, fs);
+%%
+noise = [];
+for i = 1:length(randnoise)
+    noise(i) = sin(i/5000)*randnoise(i);
+end
+noise = pn/sqrt(sum(noise.^2))*noise;
+snr_f = 10*log10(px/sqrt(sum(noise.^2)));
+noise = noise';
+siib_o_f = SIIB_Gauss(x, x+noise, fs);
+siib_trans_f = SIIB_Gauss(enhanced, enhanced+noise, fs);
+siib_static_f = SIIB_Gauss(static_enhanced, static_enhanced+noise, fs);
+%%
 SE = fftshift(fft(static_enhanced));
 
 X = fftshift(X);
-figure;
-subplot(2,1,1);
-plot(f, 2*abs(X));
-title('Original speech signal');
-xlabel('Frequency [Hz]');
-ylabel('Magnitude');
-xlim([0 4000]);
-subplot(2,1,2);
-plot(f, 2*abs(SE));
-title('Static filter enhanced speech signal');
-xlabel('Frequency [Hz]');
-ylabel('Magnitude');
-xlim([0 4000]);
-
-return;
+% figure;
+% subplot(2,1,1);
+% plot(f, 2*abs(X));
+% title('Original speech signal');
+% xlabel('Frequency [Hz]');
+% ylabel('Magnitude');
+% xlim([0 4000]);
+% subplot(2,1,2);
+% plot(f, 2*abs(SE));
+% title('Static filter enhanced speech signal');
+% xlabel('Frequency [Hz]');
+% ylabel('Magnitude');
+% xlim([0 4000]);
+% 
+% return;
 
 trans = transient_process(x, fs, 505);
 
