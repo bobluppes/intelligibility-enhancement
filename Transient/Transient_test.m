@@ -11,6 +11,14 @@ noise = 0.02*randn(n, 1);
 trans = transient_process(x, fs, 505);
 enhanced = transient_amplify(x, trans, 10);
 
+siib_old = SIIB_Gauss(x, x+noise, fs);
+siib_new = SIIB_Gauss(enhanced, enhanced+noise, fs);
+
+Ps = sqrt(sum(enhanced.^2));
+Pn = sqrt(sum(noise.^2));
+
+snr = 10*log10(Ps/Pn);
+
 return;
 
 E = fftshift(fft(enhanced));
