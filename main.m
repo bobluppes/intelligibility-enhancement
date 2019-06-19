@@ -3,7 +3,7 @@ close all
 
 % Load audio signal
 [x,fs] = audioread('maleVoice.wav');
-noise = 0.06*randn(length(x), 1);
+noise = 0.08*randn(3*length(x), 1);
 n = length(x);
 
 X = fftshift(fft(x));
@@ -113,35 +113,88 @@ return;
 
 
 %% Lombard
+clear all;
+close all
+
+% Load audio signal
+[x,fs] = audioread('maleVoice.wav');
+noise = 0.1*randn(3*length(x), 1);
+n = length(x);
+
+siib_lombard = [];
+stretch = linspace(1,3,20);
+for i = 1:length(stretch)
+    Il = Lombard(x, fs, 0, stretch(i), 0, 0);
+    noise_lombard = noise(1:length(Il));
+    snr_need = -4.6902;
+    px = sqrt(sum(Il.^2));
+    pn = px/10^(snr_need/10);
+    noise_lombard = pn/sqrt(sum(noise_lombard.^2))*noise_lombard;
+    snr(i) = 10*log10(px/ pn);
+    siib_lombard(i) = SIIB_Gauss(Il, Il+noise_lombard, fs);
+end
+plot(stretch, siib_lombard)
+xlabel('Vowel stretch factor'); ylabel('SIIB^{Gauss} [bits/s]');
+
+%%
+clear all;
+close all
+
+% Load audio signal
+[x,fs] = audioread('ButcherBlock.wav');
+
+xstretched = Lombard(x, fs, 0, 2, 0, 0);
+xtilted = Lombard(x, fs, 0, 1, 0.8, 0);
+xcompress = Lombard(x, fs, 0, 1, 0, 30);
+
+n = length(x);
+t = linspace(0, n/fs, n);
+Omega = pi*[-1 : 2/n : 1-1/n];
+f = Omega*fs/(2*pi);
+ts = linspace(0, length(xstretched)/fs, length(xstretched));
+
+X = fftshift(fft(x));
+Xt = fftshift(fft(xtilted));
+
+figure
+plot(t, x)
+hold on
+plot(ts,xstretched)
+xlabel('Time [s]'); ylabel('Amplitude');
+
+figure
+plot(f, abs(Xt),'color',[0.8500 0.3250 0.0980])
+hold on
+plot(f, abs(X),'color',[0 0.4470 0.7410])
+xlabel('Frequency [Hz]'); ylabel('Magnitude');
+
+figure
+plot(t,x)
+hold on
+plot(t,xcompress)
+xlabel('Time [s]'); ylabel('Amplitude');
+
+% ext = linspace(1, 3, 20);
+
+% mod = [];
 % siib_lombard = [];
-% tilt = linspace(0,1,20);
-% for i = 1:length(tilt)
-%     Il = Lombard(original, Fs, 0, 0.5, tilt(i));
-%     noise_lombard = train1(1:length(Il));
-%     siib_lombard(i) = SIIB_Gauss(Il, Il+noise_lombard, Fs);
+% prompt = {'Bob', 'Ellen'};
+% for i = 1:length(ext)
+%     Il = Lombard(x, fs, 0, ext(i), 0, 10);
+%     noise = 0.07*randn(length(Il), 1);
+%     ext(i)
+%     siib_lombard(i) = SIIB_Gauss(Il, Il+noise, fs)
+%     soundsc(Il + noise, fs);
+%     pause;
+%     if (i ~= 0)
+%         duration = length(Il)/fs;
+%         answer = inputdlg(prompt);
+%         mod(i) = (str2num(answer{1})/duration + str2num(answer{2})/duration)/2;
+%     end
 % end
 
-ext = linspace(1, 3, 20);
-
-mod = [];
-siib_lombard = [];
-prompt = {'Bob', 'Ellen'};
-for i = 1:length(ext)
-    Il = Lombard(x, fs, 0, ext(i), 0, 10);
-    noise = 0.07*randn(length(Il), 1);
-    ext(i)
-    siib_lombard(i) = SIIB_Gauss(Il, Il+noise, fs)
-    soundsc(Il + noise, fs);
-    pause;
-    if (i ~= 0)
-        duration = length(Il)/fs;
-        answer = inputdlg(prompt);
-        mod(i) = (str2num(answer{1})/duration + str2num(answer{2})/duration)/2;
-    end
-end
-
 return;
-
+%%
 imp = [];
 imp(1) = mod(1);
 for i = 2:length(mod)

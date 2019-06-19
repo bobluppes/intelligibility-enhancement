@@ -39,12 +39,12 @@ figure
 subplot(2,1,1);
 plot(tilt, Tilt_NF);
 title('Non-fluctuating noise');
-xlabel('Tilt factor'); ylabel('Words recognized [%]')
+xlabel('Filter coefficient'); ylabel('Words recognized [%]')
 
 subplot(2,1,2);
 plot(tilt, Tilt_F);
 title('Fluctuating noise');
-xlabel('Tilt factor'); ylabel('Words recognized [%]')
+xlabel('Filter coefficient'); ylabel('Words recognized [%]')
 
 figure
 subplot(2,1,1);

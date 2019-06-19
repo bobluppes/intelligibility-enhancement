@@ -6,7 +6,9 @@ function improved = Lombard(original, Fs, snr, extension, tilt, comp)
 % tilt: spectral tilting factor between 0 and 1
 improved = original;
 %extend vowels and spectral tilt
-improved = extend_vowels(original, Fs, extension);
+if extension ~= 1
+    improved = extend_vowels(original, Fs, extension);
+end
 improved = spectral_tilt(improved, tilt);
 
 % Normalize the improved signal power

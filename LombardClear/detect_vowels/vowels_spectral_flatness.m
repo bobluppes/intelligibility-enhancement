@@ -6,6 +6,6 @@ function [vtf] = vowels_spectral_flatness (X, f_s)
     %%%% ???? Met fft of met timedomain signal?
     %%% Spectral flatness
     frame = frame.^2;
-    vtf = geomean(frame)./mean(frame); 
+    vtf = geomean(abs(frame))./mean(abs(frame)); 
 
 end
