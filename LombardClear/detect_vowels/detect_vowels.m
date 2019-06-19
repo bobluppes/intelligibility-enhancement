@@ -22,16 +22,19 @@ end
 only_vowels = vowels.*original;
 figure
 subplot(2,2,1)
-as = linspace(1,length(original),length(sfn));
+as = linspace(0,length(original)/Fs,length(sfn));
+yyaxis left
 plot(as,sfn);
+ylabel('Log-energy');
 hold on
-%plot([0,length(sfn)],[0.47,0.47])
-as2 = linspace(1,length(original),length(original));
+as2 = linspace(0,length(original)/Fs,length(original));
+yyaxis right
 plot(as2,original);
 plot(as2,vowels);
-title('Log energy (more energy in vowels)')
-xlim([0 80000])
+xlabel('Time [s]');ylabel('Amplitude')
+xlim([0 80000/Fs])
 %soundsc(only_vowels(1:80000),Fs)
+
 %% Zero crossings
 sfn = vowels_zero_crossings(original, Fs);
 vowels = zeros(length(original),1);
@@ -47,13 +50,17 @@ end
 only_vowels = vowels.*original;
 
 subplot(2,2,2)
-as = linspace(1,length(original),length(sfn));
+as = linspace(0,length(original)/Fs,length(sfn));
+yyaxis left
 plot(as,sfn);
+ylabel('Zero-crossing rate')
 hold on
-as2 = linspace(1,length(original),length(original));
+as2 = linspace(0,length(original)/Fs,length(original));
+yyaxis right
 plot(as2,original);
-title('Zero crossings (more zerocrossings in consonants)')
-xlim([0 80000])
+plot(as2,vowels)
+xlabel('Time [s]');ylabel('Amplitude');
+xlim([0 80000/Fs])
 %soundsc(only_vowels(1:80000),Fs)
 %% Autocorrelation
 sfn = vowels_autocorrelation(original, Fs);
@@ -69,17 +76,20 @@ for i = 1:(length(sfn)-1)
 end
 only_vowels = vowels.*original;
 subplot(2,2,3)
-as = linspace(1,length(original),length(sfn));
-plot(as,sfn);
+as = linspace(0,length(original)/Fs,length(sfn));
+yyaxis left
+plot(as,sfn(:,2));
+ylabel('Lag-one autocorrelation')
 hold on
-plot([0,length(sfn)],[0.47,0.47])
-as2 = linspace(1,length(original),length(original));
+as2 = linspace(0,length(original)/Fs,length(original));
+yyaxis right
 plot(as2,original);
-title('Autocorrelation (high for vowels)')
-xlim([0 80000])
+plot(as2,vowels)
+xlabel('Time [s]');ylabel('Amplitude');
+xlim([0 80000/Fs])
 %soundsc(only_vowels(1:80000),Fs)
 %% Spectral Flatness
-sfn = vowels_spectral_flatness(original, Fs);
+sfn = vowels_spectral_flatness(fftshift(fft(original)), Fs);
 vowels = zeros(length(original),1);
 frame = round(length(original)/length(sfn));
 for i = 1:(length(sfn)-1)
@@ -92,17 +102,20 @@ for i = 1:(length(sfn)-1)
 end
 only_vowels = vowels.*original;
 subplot(2,2,4)
-as = linspace(1,length(original),length(sfn));
+as = linspace(0,length(original)/Fs,length(sfn));
+yyaxis left
 plot(as,sfn);
+ylabel('Spectral flattening')
 hold on
-plot([0,length(sfn)],[0.47,0.47])
-as2 = linspace(1,length(original),length(original));
+as2 = linspace(0,length(original)/Fs,length(original));
+yyaxis right
 plot(as2,original);
-title('Spectral flattening (high for consonants)')
-xlim([0 80000])
+plot(as2,vowels)
+xlabel('Time [s]');ylabel('Amplitude');
+xlim([0 80000/Fs])
 %soundsc(only_vowels(1:80000),Fs)
 
-suptitle('She had your dark suit and greasy wash water all year ')
+% suptitle('She had your dark suit and greasy wash water all year ')
 
 %%%% 0:80000: She had your dark suit and greasy wash water all year
 
