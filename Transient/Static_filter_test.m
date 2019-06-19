@@ -8,10 +8,31 @@ Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*fs/(2*pi);
 randnoise = randn(n, 1);
 
-X = fftshift(fft(x));
+trans = transient_process(x, fs, 505);
+enhanced = transient_amplify(x, trans, 10);
 
+filter = Transient_static(enhanced, x);
+
+X = fft(x);
+
+static_enhanced = ifft(X.*filter);
+
+SE = fftshift(fft(static_enhanced));
+
+X = fftshift(X);
 figure;
-plot(f, abs(X));
+subplot(2,1,1);
+plot(f, 2*abs(X));
+title('Original speech signal');
+xlabel('Frequency [Hz]');
+ylabel('Magnitude');
+xlim([0 4000]);
+subplot(2,1,2);
+plot(f, 2*abs(SE));
+title('Static filter enhanced speech signal');
+xlabel('Frequency [Hz]');
+ylabel('Magnitude');
+xlim([0 4000]);
 
 return;
 
