@@ -91,11 +91,10 @@ sig_x   = sqrt(mean(X(:, VAD).^2, 2));
 sig_e   = sqrt(mean(Y(:, VAD).^2, 2));
 w = 0.75 * ones(length(sig_x), 1);
 alphas = getOptimalGain(sig_x, sig_e, w);
+%alphas = repmat(alphas, [1 size(X, 2)]);
 Xh = X .* alphas;
-N       = round(fs_signal*32/1000);
-[H cf]  = gt_getfb(150, min(fs_signal/2, 8500), fs_signal, N*2, 64);
-xh  	= gt_synthesis(Xh, transpose(x+randn(size(x))*std(x)/1000), H, N);
-enhanced      = norm(x).*xh./norm(xh);
+Xh = Xh / U;
+enhanced      = Xh;
 
 rho_p_squared = 0.75^2;                                   % production noise correlation coefficient
 rho_squared = mean(X.*Y).^2./(mean(X.^2).*mean(Y.^2));    % long-time squared correlation coefficient for the environmental channel

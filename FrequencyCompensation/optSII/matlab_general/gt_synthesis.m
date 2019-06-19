@@ -1,11 +1,11 @@
 function y  = gt_synthesis(X, x, H, N_frame)
 
 %%
-K               = (size(H, 2)-1)*2;
+K               = (size(H, 2)-1)*2
 x_hat           = stdft(x, N_frame, N_frame/2, K); 	% apply short-time DFT to clean speech
 x_hat           = x_hat(:, 1:(K/2+1)).';         	% take clean single-sided spectrum
 y_hat           = zeros(size(x_hat));
-
+size(x_hat)
 %%
 for m = 1:size(x_hat, 2)
     for k = 1:size(H, 1)

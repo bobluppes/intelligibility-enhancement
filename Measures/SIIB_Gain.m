@@ -1,9 +1,12 @@
-function g = SIIB_Gain(x, n, fs_signal, bits)
+function [g convergence error] = SIIB_Gain(x, n, fs_signal, bits)
 % Find the necessary gain to achieve a SIIB_Gauss of bits
 % 1 <= G <= 100
 
 a = 1;
 b = 100;
+
+converge = [];
+err = [];
 
 % Check if necessary gain is contained in the interval
 a_v = difference(a, x, n, fs_signal, bits);
@@ -15,11 +18,13 @@ end
 % Tolerance in bits
 e = 0.5;
 
-i = 0;
+i = 1;
 while(1)
     % Calculate midpoint
     c = (a + b) / 2;
+    converge(i) = c;
     c_v = difference(c, x, n, fs_signal, bits)
+    err(i) = abs(c_v);
     
     if (abs(c_v) <= e)
         break
@@ -43,6 +48,8 @@ end
 
 fprintf('Gain computed in %d iterations', i);
 g = c;
+convergence = converge;
+error = err;
 
 function d = difference(f, x, n, fs_signal, bits)
 d = bits - SIIB_Gauss(f*x, f*x+n, fs_signal);
