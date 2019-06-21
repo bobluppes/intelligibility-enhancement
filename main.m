@@ -3,13 +3,10 @@ close all
 
 % Load audio signal
 [x,fs] = audioread('maleVoice.wav');
-noise = 0.08*randn(3*length(x), 1);
+noise = 0.03*randn(length(x), 1);
 n = length(x);
 
-X = fftshift(fft(x));
-
-
-[g converge error] = SIIB_Gain(x, noise, fs, 120);
+[g converge error] = SIIB_Gain(x, noise, fs, 150);
 
 figure;
 plot(converge, 'o');
@@ -19,7 +16,7 @@ ylabel('Determined Gain');
 figure;
 plot(error, 'o');
 xlabel('Iteration Step');
-ylabel('Absolute Error');
+ylabel('Absolute Error [bits/s]');
 
 return;
 

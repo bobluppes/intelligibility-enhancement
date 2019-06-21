@@ -28,12 +28,7 @@ function [xh SII_old SII_new] = sii_opt(x, n, fs)
 x       = x(:);
 n       = n(:);
 
-% ERB gammatone filterbank
-mn = 100;   % minimum center frequency
-mx = 6500;  % maximum center frequency
-J = round(21.4*log10(1+0.00437*mx)-21.4*log10(1+0.00437*mn)); % number of filters
-[G, sii_bl] = gammatone(fs, 400, J, mn, mx);
-%sii_bl  = [100 200 300 400 510 630 770 920 1080 1270 1480 1720 2000 2320 2700 3150 3700 4400 5300 6400 7700; 200 300 400 510 630 770 920 1080 1270 1480 1720 2000 2320 2700 3150 3700 4400 5300 6400 7700 9500];
+sii_bl  = [100 200 300 400 510 630 770 920 1080 1270 1480 1720 2000 2320 2700 3150 3700 4400 5300 6400 7700; 200 300 400 510 630 770 920 1080 1270 1480 1720 2000 2320 2700 3150 3700 4400 5300 6400 7700 9500];
 sii_cf  = exp(mean(log(sii_bl)));
 sii_bi  = [0.0103 0.0261 0.0419 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0577 0.0460 0.0343 0.0226 0.0110].';
 sii_bi = 0.75 * ones(length(sii_bi), 1);
@@ -47,16 +42,10 @@ w       = max(w, 0);
 X    	= gt_analysis(x, H, N);
 E       = gt_analysis(n, H, N);
 
-size(X)
-size(E)
-
 VAD     = 10*log10(mean(X.^2))>(max(10*log10(mean(X.^2)))-60);
 
 sig_x   = sqrt(mean(X(:, VAD).^2, 2));
 sig_e   = sqrt(mean(E(:, VAD).^2, 2));
-
-size(sig_x)
-size(sig_e)
 
 alpha   = repmat(getOptimalGain(sig_x, sig_e, w), [1 size(X, 2)]);
 

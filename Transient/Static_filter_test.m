@@ -6,16 +6,21 @@ close all
 n = length(x);
 Omega = pi*[-1 : 2/n : 1-1/n];
 f = Omega*fs/(2*pi);
-randnoise = randn(n, 1);
+randnoise = 0.02*randn(n, 1);
 
-snr_need = 3;
-px = sqrt(sum(x.^2));
-pn = px/10^(snr_need/10);
-randnoise = pn/sqrt(sum(randnoise.^2))*randnoise;
-snr = 10*log10(px/ pn);
+% snr_need = 3;
+% px = sqrt(sum(x.^2));
+% pn = px/10^(snr_need/10);
+% randnoise = pn/sqrt(sum(randnoise.^2))*randnoise;
+% snr = 10*log10(px/ pn);
 
 trans = transient_process(x, fs, 505);
 enhanced = transient_amplify(x, trans, 10);
+
+siib_old = SIIB_Gauss(x, x+randnoise, fs);
+siib_new = SIIB_Gauss(enhanced, enhanced+randnoise, fs);
+
+return;
 
 filter = Transient_static(enhanced, x);
 

@@ -1,10 +1,9 @@
 # Intelligibility Enhancement
 Three different methods for intelligibility enhancement are considered and implemented in matlab.
-The results are analyzed by the short time objective intelligibility measure (STOI) and speech
-intelligibility in bits (SIIB). The following intelligibility enhancing algorithms are considered
+The results are analyzed using speech intelligibility in bits (SIIB). The following intelligibility enhancing algorithms are considered
 
-* Frequency compensation by algebra?cally optimizing for SIIB_Gauss
-* Lombard effect
+* Frequency compensation by algebraical optimization for SIIB_Gauss
+* Lombard algorithm
 * Transient amplification
 
 All files need to be added to the path 

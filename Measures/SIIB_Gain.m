@@ -1,9 +1,9 @@
 function [g convergence error] = SIIB_Gain(x, n, fs_signal, bits)
 % Find the necessary gain to achieve a SIIB_Gauss of bits
-% 1 <= G <= 100
+% 1 <= G <= 10
 
 a = 1;
-b = 100;
+b = 10;
 
 converge = [];
 err = [];
@@ -12,11 +12,21 @@ err = [];
 a_v = difference(a, x, n, fs_signal, bits);
 b_v = difference(b, x, n, fs_signal, bits);
 if ((a_v * b_v) >= 0)
-    error('optimal gain not contained in interval');
+    if (a_v < 0)
+        g = 1;
+        convergence = [];
+        error = [];
+        return;
+    else
+        g = 10;
+        convergence = [];
+        error = [];
+        return;
+    end
 end
 
 % Tolerance in bits
-e = 0.5;
+e = 5;
 
 i = 1;
 while(1)
@@ -27,7 +37,14 @@ while(1)
     err(i) = abs(c_v);
     
     if (abs(c_v) <= e)
-        break
+        if (c_v <= 0)
+            break;
+        end
+    elseif (c > 9.9)
+        c = 10;
+        break;
+    elseif (c < 1.1)
+        c = 1;
     end
     
     if (1 ~= 0)
